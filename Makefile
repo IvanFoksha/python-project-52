@@ -13,5 +13,5 @@ build:
 render-start:
 	gunicorn task_manager.wsgi
 
-start:
+render-start:
 	python manage.py runserver
