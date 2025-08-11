@@ -4,6 +4,9 @@ install:
 migrate:
 	python manage.py migrate
 
+collectstatic:
+	python manage.py collectstatic --noinput
+
 build:
 	./build.sh
 
