@@ -1,0 +1,19 @@
+[project]
+authors = [
+    {name = "Ivan Foksha", email = "v.foksh6@gmail.com"}
+]
+name = "hexlet-code"
+version = "0.1.0"
+description = "Task Manager - A Django-based task management system"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django==5.1.1",
+    "gunicorn==23.0.0",
+    "python-dotenv==1.0.1",
+    "dj-database-url==2.2.0",
+    "psycopg==3.2.2",
+]
+
+[tool.uv]
+package = true
