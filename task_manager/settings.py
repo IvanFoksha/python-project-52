@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv(
     'django-insecure-default-key-for-dev'
 )
 
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     'webserver',
@@ -66,13 +66,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
 # PostgreSQL для Render, SQLite для локальной разработки
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL', f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
+DATABASE_URL = os.getenv('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -89,15 +98,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Интернационализация
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Настройки статики
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Тип первичного ключа по умолчанию
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
