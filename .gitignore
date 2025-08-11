@@ -11,4 +11,4 @@ staticfiles/
 .python-version
 migrations/
 activate/
-hexlet_code.egg-info/
+*.egg-info/
