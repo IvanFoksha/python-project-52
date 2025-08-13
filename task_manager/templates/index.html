@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Task Manager</title>
-  </head>
-  <body>
-    <h1>Welcome to Task Manager!</h1>
-  </body>
-</html>
+{% extends "base.html" %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="text-center">
+      <h1>Добро пожаловать в Менеджер задач</h1>
+      <p class="lead">UI готов. Поп-апы работают. Адаптив — на месте.</p>
+      <button
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#loginModal"
+      >
+        Проверить вход
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
