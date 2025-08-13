@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Менеджер задач</title>
+    {% load django_bootstrap5 %} {% bootstrap_css %}
+    <style>
+      body {
+        background-color: #212529;
+        color: #e9ecef;
+      }
+      .navbar-toggler-icon {
+        width: 1.5em;
+        height: 1.5em;
+        background-image: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0.3em;
+      }
+      .navbar-toggler-icon::before,
+      .navbar-toggler-icon::after,
+      .navbar-toggler-icon span {
+        content: "";
+        background-color: #ffc107;
+        height: 3px;
+        border-radius: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header
+        class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom bg-dark"
+        style="border-color: #495057 !important"
+      >
+        <div class="col-4 d-flex align-items-center">
+          <a href="/" class="text-white text-decoration-none">
+            <strong class="fs-5">Менеджер задач</strong>
+          </a>
+        </div>
+
+        <!-- #Лого <div
+          class="logo-container col-4 d-flex justify-content-center order-md-0"
+        >
+          <a href="/">
+            <svg
+              class="bi"
+              width="48"
+              height="48"
+              fill="currentColor"
+              role="img"
+              aria-label="Logo"
+            >
+              <use
+                xlink:href="https://getbootstrap.com/docs/5.3/assets/img/bootstrap-icons.svg#check2-circle"
+              />
+            </svg>
+          </a>
+        </div> -->
+
+        <div class="col-4 d-flex justify-content-end align-items-center">
+          <ul class="nav nav-pills d-none d-md-flex">
+            <li class="nav-item">
+              <a href="/users/" class="nav-link text-light px-2"
+                >Пользователи</a
+              >
+            </li>
+            <li class="nav-item">
+              <a href="/about/" class="nav-link text-light px-2">О проекте</a>
+            </li>
+          </ul>
+
+          <div class="d-md-none">
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#topNavbarMenu"
+              aria-controls="topNavbarMenu"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+              style="
+                border-color: #ffc107;
+                background-color: rgba(255, 193, 7, 0.1);
+              "
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+
+          <div class="text-center mx-auto my-2">
+            <button
+              type="button"
+              class="btn btn-outline-warning btn-sm me-3"
+              data-bs-toggle="modal"
+              data-bs-target="#loginModal"
+            >
+              Вход
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning btn-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#registerModal"
+            >
+              Регистрация
+            </button>
+          </div>
+        </div>
+
+        <div class="collapse d-md-none mt-2 w-100" id="topNavbarMenu">
+          <ul class="nav flex-column text-center">
+            <li class="nav-item">
+              <a href="/users/" class="nav-link text-light">Пользователи</a>
+            </li>
+            <li class="nav-item">
+              <a href="/about/" class="nav-link text-light">О проекте</a>
+            </li>
+          </ul>
+        </div>
+      </header>
+
+      <div
+        class="modal fade"
+        id="loginModal"
+        tabindex="-1"
+        aria-labelledby="loginModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+              <h5 class="modal-title" id="loginModalLabel">Вход в систему</h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Закрыть"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="login" class="form-label">Имя пользователя</label>
+                  <input
+                    type="login"
+                    class="form-control bg-secondary text-light"
+                    id="loginUser"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="loginPassword" class="form-label">Пароль</label>
+                  <input
+                    type="password"
+                    class="form-control bg-secondary text-light"
+                    id="pass_user"
+                    required
+                  />
+                </div>
+                <div class="form-check mb-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="rememberMe"
+                  />
+                  <label class="form-check-label" for="rememberMe"
+                    >Запомнить меня</label
+                  >
+                </div>
+                <button type="submit" class="btn btn-warning w-100">
+                  Войти
+                </button>
+              </form>
+            </div>
+            <div class="modal-footer justify-content-center text-muted small">
+              <span class="text-light">Нет аккаунта?</span>
+              <a
+                href="#"
+                class="text-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#registerModal"
+                data-bs-dismiss="modal"
+                >Зарегистрируйтесь</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="modal fade"
+        id="registerModal"
+        tabindex="-1"
+        aria-labelledby="registerModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+              <h5 class="modal-title" id="registerModalLabel">Регистрация</h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Закрыть"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="registerName" class="form-label">Имя</label>
+                  <input
+                    type="text"
+                    class="form-control bg-secondary text-light"
+                    id="registerName"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="registerSurname" class="form-label"
+                    >Фамилия</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control bg-secondary text-light"
+                    id="registerSurname"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="registerLogin" class="form-label">Email</label>
+                  <input
+                    type="login"
+                    class="form-control bg-secondary text-light"
+                    id="registerLogin"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="registerPassword" class="form-label"
+                    >Пароль</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control bg-secondary text-light"
+                    id="registerPassword"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="registerPasswordConfirm" class="form-label"
+                    >Подтвердите пароль</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control bg-secondary text-light"
+                    id="registerPasswordConfirm"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-warning w-100">
+                  Зарегистрироваться
+                </button>
+              </form>
+            </div>
+            <div class="modal-footer justify-content-center text-muted small">
+              <span class="text-light">Уже есть аккаунт?</span>
+              <a
+                href="#"
+                class="text-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
+                data-bs-dismiss="modal"
+                >Войти</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <main>{% block content %} {% endblock %}</main>
+    </div>
+
+    {% bootstrap_javascript %}
+  </body>
+</html>
