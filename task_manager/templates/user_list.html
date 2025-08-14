@@ -9,15 +9,28 @@
     >
       {{ user.username }}
       <div>
-        <!-- Временный вариант -->
-        <span>Редактировать</span>
-        <span>Удалить</span>
+        <a
+          href="{% url 'user_update' pk=user.pk %}"
+          class="btn btn-warning btn-sm me-2"
+          >Редактировать</a
+        >
+        <a
+          href="{% url 'user_delete' pk=user.pk %}"
+          class="btn btn-danger btn-sm"
+          >Удалить</a
+        >
       </div>
     </li>
     {% endfor %}
   </ul>
+  <a href="{% url 'user_create' %}" class="btn btn-success mt-3"
+    >Добавить пользователя</a
+  >
   {% else %}
   <p class="text-light">Нет пользователей.</p>
+  <a href="{% url 'user_create' %}" class="btn btn-success mt-3"
+    >Добавить пользователя</a
+  >
   {% endif %}
 </div>
 {% endblock %}
