@@ -11,3 +11,6 @@ class UserListView(ListView):
     model = User
     template_name = 'user_list.html'
     context_object_name = 'users'
+
+    def get_queryset(self):
+        return User.objects.all()
