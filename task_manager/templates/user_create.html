@@ -1,6 +1,39 @@
 {% extends 'base.html' %} {% block content %}
 <div class="container mt-4">
   <h2 class="text-light">Регистрация нового пользователя</h2>
+  {% if messages %} {% for message in messages %}
+  <div
+    class="alert alert-{{ message.tags }} alert-dismissible fade show"
+    role="alert"
+  >
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %} {% endif %}
+
+  <p class="text-light"><strong>Требования к заполнению:</strong></p>
+  <ul class="text-light">
+    <li>Имя: Укажите ваше имя (например, Иван).</li>
+    <li>Фамилия: Укажите вашу фамилию (например, Иванов).</li>
+    <li>
+      Имя пользователя: Уникальное имя для входа (например, ivan_i, только
+      латинские буквы и цифры).
+    </li>
+  </ul>
+
+  <p class="text-light"><strong>Требования к паролю:</strong></p>
+  <ul class="text-light">
+    <li>Минимальная длина: 8 символов.</li>
+    <li>Обязательно включите хотя бы одну заглавную букву (например, A, B).</li>
+    <li>Обязательно включите хотя бы одну цифру (например, 1, 2).</li>
+    <li>Пароли должны совпадать в обоих полях.</li>
+  </ul>
+
   <form method="post">
     {% csrf_token %} {{ form.as_p }}
     <button type="submit" class="btn btn-warning">Зарегистрироваться</button>
