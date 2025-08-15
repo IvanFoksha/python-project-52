@@ -6,17 +6,14 @@ from django.views.generic import (
     DeleteView,
 )
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import (
-    UserCreationForm,
-    UserChangeForm,
-    AuthenticationForm,
-)
+from django.contrib.auth.forms import UserChangeForm, AuthenticationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import login, authenticate
 from django.http import JsonResponse
 from django.views import View
 from django.contrib import messages
+from django import forms
 
 
 def index(request):
@@ -34,13 +31,62 @@ class UserListView(ListView):
 
 class UserCreateView(CreateView):
     model = User
-    form_class = UserCreationForm
     template_name = 'user_create.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('index')
+    form_class = forms.ModelForm
+    fields = ['username', 'first_name', 'last_name', 'password']
+
+    def get_form_class(self):
+        class CustomUserCreationForm(forms.ModelForm):
+            password = forms.CharField(
+                widget=forms.PasswordInput,
+                label="Пароль"
+            )
+            password_confirm = forms.CharField(
+                widget=forms.PasswordInput,
+                label="Подтверждение пароля"
+            )
+
+            class Meta:
+                model = User
+                fields = ['username', 'first_name', 'last_name', 'password']
+
+            def clean(self):
+                cleaned_data = super().clean()
+                password = cleaned_data.get("password")
+                password_confirm = cleaned_data.get("password_confirm")
+                if password != password_confirm:
+                    raise forms.ValidationError("Пароли не совпадают.")
+                if len(password) < 8 or not any(c.isupper() for c in password) or not any(c.isdigit() for c in password):
+                    raise forms.ValidationError(
+                        "Пароль должен содержать минимум 8 символов, включая заглавную букву и цифру."
+                    )
+                return cleaned_data
+
+            def save(self, commit=True):
+                user = super().save(commit=False)
+                user.set_password(self.cleaned_data["password"])
+                if commit:
+                    user.save()
+                return user
+
+        return CustomUserCreationForm
 
     def form_valid(self, form):
         user = form.save()
+        messages.success(
+            self.request,
+            f'Пользователь {user.username} успешно создан!'
+        )
+        login(self.request, user)
         return redirect(self.success_url)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            'Ошибка создания пользователя. Проверьте данные.'
+        )
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -75,9 +121,6 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 class CustomLoginView(View):
-    form_class = AuthenticationForm
-    template_name = 'login.html'
-
     def post(self, request, *args, **kwargs):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -90,14 +133,3 @@ class CustomLoginView(View):
             {'success': False, 'message': 'Неверные данные'},
             status=400
         )
-
-    def login_view(request):
-        if request.method == 'POST':
-            form = AuthenticationForm(data=request.POST)
-            if form.is_valid():
-                user = form.get_user()
-                login(request, user)
-                return redirect('index')
-            else:
-                return JsonResponse({'success': True, 'message': 'Неверные данные'}, status=400)
-        return render(request, 'login.html')
