@@ -108,14 +108,9 @@
             >
               Вход
             </button>
-            <button
-              type="button"
-              class="btn btn-warning btn-sm"
-              data-bs-toggle="modal"
-              data-bs-target="#registerModal"
+            <a href="{% url 'user_create' %}" class="btn btn-warning btn-sm"
+              >Регистрация</a
             >
-              Регистрация
-            </button>
             {% endif %}
           </div>
         </div>
@@ -198,96 +193,8 @@
             </div>
             <div class="modal-footer justify-content-center text-light small">
               Нет аккаунта?
-              <a
-                href="#"
-                class="text-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#registerModal"
-                data-bs-dismiss="modal"
+              <a href="{% url 'user_create' %}" class="text-warning"
                 >Зарегистрируйтесь</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        class="modal fade"
-        id="registerModal"
-        tabindex="-1"
-        aria-labelledby="registerModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content bg-dark text-light">
-            <div class="modal-header">
-              <h5 class="modal-title" id="registerModalLabel">Регистрация</h5>
-              <button
-                type="button"
-                class="btn-close btn-close-white"
-                data-bs-dismiss="modal"
-                aria-label="Закрыть"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form method="post" action="{% url 'user_create' %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                  <label for="id_username" class="form-label">Имя</label>
-                  <input
-                    type="text"
-                    class="form-control bg-secondary text-light"
-                    id="id_username"
-                    name="username"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="id_email" class="form-label">Email</label>
-                  <input
-                    type="email"
-                    class="form-control bg-secondary text-light"
-                    id="id_email"
-                    name="email"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="id_password1" class="form-label">Пароль</label>
-                  <input
-                    type="password"
-                    class="form-control bg-secondary text-light"
-                    id="id_password1"
-                    name="password1"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="id_password2" class="form-label"
-                    >Подтвердите пароль</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control bg-secondary text-light"
-                    id="id_password2"
-                    name="password2"
-                    required
-                  />
-                </div>
-                <button type="submit" class="btn btn-warning w-100">
-                  Зарегистрироваться
-                </button>
-              </form>
-            </div>
-            <div class="modal-footer justify-content-center text-light small">
-              Уже есть аккаунт?
-              <a
-                href="#"
-                class="text-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#loginModal"
-                data-bs-dismiss="modal"
-                >Войти</a
               >
             </div>
           </div>
