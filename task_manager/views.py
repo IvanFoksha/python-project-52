@@ -33,6 +33,7 @@ class UserCreateView(CreateView):
     model = User
     template_name = 'user_create.html'
     success_url = reverse_lazy('index')
+
     form_class = forms.ModelForm
     fields = ['username', 'first_name', 'last_name', 'password']
 
@@ -57,9 +58,16 @@ class UserCreateView(CreateView):
                 password_confirm = cleaned_data.get("password_confirm")
                 if password != password_confirm:
                     raise forms.ValidationError("Пароли не совпадают.")
-                if len(password) < 8 or not any(c.isupper() for c in password) or not any(c.isdigit() for c in password):
+                if len(password) < 8 or not any(
+                    c.isupper() for c in password
+                ) or not any(
+                    c.isdigit() for c in password
+                ):
                     raise forms.ValidationError(
-                        "Пароль должен содержать минимум 8 символов, включая заглавную букву и цифру."
+                        '''
+                        Пароль должен содержать минимум 8 символов,
+                        включая заглавную букву и цифру.
+                        '''
                     )
                 return cleaned_data
 
@@ -84,7 +92,7 @@ class UserCreateView(CreateView):
     def form_invalid(self, form):
         messages.error(
             self.request,
-            'Ошибка создания пользователя. Проверьте данные.'
+            'Ошибка регистрации. Проверьте данные.'
         )
         return self.render_to_response(self.get_context_data(form=form))
 

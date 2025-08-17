@@ -1,21 +1,6 @@
 {% extends 'base.html' %} {% block content %}
 <div class="container mt-4">
   <h2 class="text-light">Регистрация нового пользователя</h2>
-  {% if messages %} {% for message in messages %}
-  <div
-    class="alert alert-{{ message.tags }} alert-dismissible fade show"
-    role="alert"
-  >
-    {{ message }}
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-  </div>
-  {% endfor %} {% endif %}
-
   <p class="text-light"><strong>Требования к заполнению:</strong></p>
   <ul class="text-light">
     <li>Имя: Укажите ваше имя (например, Иван).</li>
@@ -35,8 +20,157 @@
   </ul>
 
   <form method="post">
-    {% csrf_token %} {{ form.as_p }}
-    <button type="submit" class="btn btn-warning">Зарегистрироваться</button>
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="id_username" class="form-label">Имя пользователя</label>
+      <input
+        type="text"
+        class="form-control bg-secondary text-light"
+        id="id_username"
+        name="username"
+        value="{{ form.username.value|default_if_none:'' }}"
+        required
+      />
+      {% if form.username.errors %}
+      <div class="alert alert-danger text-light bg-secondary mt-2">
+        {{ form.username.errors.0 }}
+      </div>
+      {% endif %}
+    </div>
+    <div class="mb-3">
+      <label for="id_first_name" class="form-label">Имя</label>
+      <input
+        type="text"
+        class="form-control bg-secondary text-light"
+        id="id_first_name"
+        name="first_name"
+        value="{{ form.first_name.value|default_if_none:'' }}"
+        required
+      />
+      {% if form.first_name.errors %}
+      <div class="alert alert-danger text-light bg-secondary mt-2">
+        {{ form.first_name.errors.0 }}
+      </div>
+      {% endif %}
+    </div>
+    <div class="mb-3">
+      <label for="id_last_name" class="form-label">Фамилия</label>
+      <input
+        type="text"
+        class="form-control bg-secondary text-light"
+        id="id_last_name"
+        name="last_name"
+        value="{{ form.last_name.value|default_if_none:'' }}"
+        required
+      />
+      {% if form.last_name.errors %}
+      <div class="alert alert-danger text-light bg-secondary mt-2">
+        {{ form.last_name.errors.0 }}
+      </div>
+      {% endif %}
+    </div>
+    <div class="mb-3">
+      <label for="id_password_create" class="form-label">Пароль</label>
+      <!-- Изменил ID для уникальности -->
+      <input
+        type="password"
+        class="form-control bg-secondary text-light"
+        id="id_password_create"
+        name="password"
+        value="{{ form.password.value|default_if_none:'' }}"
+        required
+      />
+      <div class="form-check mt-2">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="showPasswordCreate"
+        />
+        <label class="form-check-label text-light" for="showPasswordCreate"
+          >Показывать пароль</label
+        >
+      </div>
+      {% if form.password.errors %}
+      <div class="alert alert-danger text-light bg-secondary mt-2">
+        {{ form.password.errors.0 }}
+      </div>
+      {% endif %}
+    </div>
+    <div class="mb-3">
+      <label for="id_password_confirm" class="form-label"
+        >Подтверждение пароля</label
+      >
+      <input
+        type="password"
+        class="form-control bg-secondary text-light"
+        id="id_password_confirm"
+        name="password_confirm"
+        value="{{ form.password_confirm.value|default_if_none:'' }}"
+        required
+      />
+      <div class="form-check mt-2">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="showPasswordConfirm"
+        />
+        <label class="form-check-label text-light" for="showPasswordConfirm"
+          >Показывать пароль</label
+        >
+      </div>
+      {% if form.password_confirm.errors %}
+      <div class="alert alert-danger text-light bg-secondary mt-2">
+        {{ form.password_confirm.errors.0 }}
+      </div>
+      {% endif %} {% if form.non_field_errors %}
+      <div class="alert alert-danger text-light bg-secondary mt-2">
+        {{ form.non_field_errors.0 }}
+      </div>
+      {% endif %}
+    </div>
+    <button type="submit" class="btn btn-warning w-100">
+      Зарегистрироваться
+    </button>
   </form>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const showPasswordCreate = document.getElementById("showPasswordCreate");
+    const showPasswordConfirm = document.getElementById("showPasswordConfirm");
+    const passwordField = document.getElementById("id_password_create");
+    const passwordConfirmField = document.getElementById("id_password_confirm");
+
+    console.log("Elements found:", {
+      showPasswordCreate,
+      showPasswordConfirm,
+      passwordField,
+      passwordConfirmField,
+    });
+
+    if (showPasswordCreate && passwordField) {
+      showPasswordCreate.addEventListener("click", function () {
+        console.log("Checkbox state:", this.checked);
+        const currentValue = passwordField.value;
+        passwordField.type = this.checked ? "text" : "password";
+        passwordField.value = currentValue;
+        console.log(
+          "Password field type set to:",
+          passwordField.type,
+          "Value:",
+          passwordField.value
+        );
+      });
+    }
+
+    if (showPasswordConfirm && passwordConfirmField) {
+      showPasswordConfirm.addEventListener("click", function () {
+        const currentValue = passwordConfirmField.value;
+        passwordConfirmField.type = this.checked ? "text" : "password";
+        passwordConfirmField.value = currentValue;
+        console.log("Confirm field type set to:", passwordConfirmField.type);
+      });
+    }
+  });
+</script>
 {% endblock %}
