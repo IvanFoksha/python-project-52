@@ -141,25 +141,11 @@
     const passwordField = document.getElementById("id_password_create");
     const passwordConfirmField = document.getElementById("id_password_confirm");
 
-    console.log("Elements found:", {
-      showPasswordCreate,
-      showPasswordConfirm,
-      passwordField,
-      passwordConfirmField,
-    });
-
     if (showPasswordCreate && passwordField) {
       showPasswordCreate.addEventListener("click", function () {
-        console.log("Checkbox state:", this.checked);
         const currentValue = passwordField.value;
         passwordField.type = this.checked ? "text" : "password";
         passwordField.value = currentValue;
-        console.log(
-          "Password field type set to:",
-          passwordField.type,
-          "Value:",
-          passwordField.value
-        );
       });
     }
 
@@ -168,7 +154,6 @@
         const currentValue = passwordConfirmField.value;
         passwordConfirmField.type = this.checked ? "text" : "password";
         passwordConfirmField.value = currentValue;
-        console.log("Confirm field type set to:", passwordConfirmField.type);
       });
     }
   });
