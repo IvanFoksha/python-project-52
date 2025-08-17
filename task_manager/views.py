@@ -109,7 +109,4 @@ class CustomLoginView(View):
             messages.success(request, f'Вы успешно вошли как {user.username}!')
             return redirect('index')
         messages.error(request, 'Неверные данные или ошибка входа.')
-        return JsonResponse(
-            {'success': False, 'message': 'Неверные данные'},
-            status=400
-        )
+        return render(request, 'index.html', {'form': form})
