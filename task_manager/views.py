@@ -6,14 +6,18 @@ from django.views.generic import (
     DeleteView,
 )
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserChangeForm, AuthenticationForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import (
+    login,
+    authenticate,
+    update_session_auth_hash,
+)
 from django.http import JsonResponse
 from django.views import View
 from django.contrib import messages
-from django import forms
+from .forms import CustomUserCreationForm, UserChangeForm
 
 
 def index(request):
@@ -33,52 +37,7 @@ class UserCreateView(CreateView):
     model = User
     template_name = 'user_create.html'
     success_url = reverse_lazy('index')
-
-    form_class = forms.ModelForm
-    fields = ['username', 'first_name', 'last_name', 'password']
-
-    def get_form_class(self):
-        class CustomUserCreationForm(forms.ModelForm):
-            password = forms.CharField(
-                widget=forms.PasswordInput,
-                label="Пароль"
-            )
-            password_confirm = forms.CharField(
-                widget=forms.PasswordInput,
-                label="Подтверждение пароля"
-            )
-
-            class Meta:
-                model = User
-                fields = ['username', 'first_name', 'last_name', 'password']
-
-            def clean(self):
-                cleaned_data = super().clean()
-                password = cleaned_data.get("password")
-                password_confirm = cleaned_data.get("password_confirm")
-                if password != password_confirm:
-                    raise forms.ValidationError("Пароли не совпадают.")
-                if len(password) < 8 or not any(
-                    c.isupper() for c in password
-                ) or not any(
-                    c.isdigit() for c in password
-                ):
-                    raise forms.ValidationError(
-                        '''
-                        Пароль должен содержать минимум 8 символов,
-                        включая заглавную букву и цифру.
-                        '''
-                    )
-                return cleaned_data
-
-            def save(self, commit=True):
-                user = super().save(commit=False)
-                user.set_password(self.cleaned_data["password"])
-                if commit:
-                    user.save()
-                return user
-
-        return CustomUserCreationForm
+    form_class = CustomUserCreationForm
 
     def form_valid(self, form):
         user = form.save()
@@ -111,6 +70,19 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def handle_no_permission(self):
         return redirect('user_list')
+
+    def form_valid(self, form):
+        user = form.save()
+        update_session_auth_hash(self.request, user)
+        messages.success(self.request, 'Профиль успешно обновлен!')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            'Исправьте ошибки в форме.'
+        )
+        return super().form_invalid(form)
 
 
 class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
