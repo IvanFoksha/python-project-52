@@ -29,7 +29,7 @@ def about(request):
 
 class UserListView(ListView):
     model = User
-    template_name = 'user_list.html'
+    template_name = 'users/user_list.html'
     context_object_name = 'users'
 
     def get_queryset(self):
@@ -41,7 +41,7 @@ class UserListView(ListView):
 
 class UserCreateView(CreateView):
     model = User
-    template_name = 'user_create.html'
+    template_name = 'users/user_create.html'
     success_url = reverse_lazy('index')
     form_class = CustomUserCreationForm
 
@@ -65,7 +65,7 @@ class UserCreateView(CreateView):
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = User
     form_class = UserChangeForm
-    template_name = 'user_update.html'
+    template_name = 'users/user_update.html'
     success_url = reverse_lazy('user_list')
 
     def test_func(self):
@@ -97,7 +97,7 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = User
-    template_name = 'user_delete.html'
+    template_name = 'users/user_delete.html'
     success_url = reverse_lazy('user_list')
 
     def test_func(self):
@@ -128,7 +128,7 @@ class CustomLoginView(View):
 
 class StatusListView(LoginRequiredMixin, ListView):
     model = Status
-    template_name = 'status_list.html'
+    template_name = 'statuses/status_list.html'
     context_object_name = 'statuses'
 
     def get_queryset(self):
@@ -140,7 +140,7 @@ class StatusListView(LoginRequiredMixin, ListView):
 
 class StatusCreateView(LoginRequiredMixin, CreateView):
     model = Status
-    template_name = 'status_create.html'
+    template_name = 'statuses/status_create.html'
     success_url = reverse_lazy('status_list')
     fields = ['name']
 
@@ -162,7 +162,7 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
 
 class StatusUpdateView(LoginRequiredMixin, UpdateView):
     model = Status
-    template_name = 'status_update.html'
+    template_name = 'statuses/status_update.html'
     success_url = reverse_lazy('status_list')
     fields = ['name']
 
@@ -197,7 +197,7 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
 
 class StatusDeleteView(LoginRequiredMixin, DeleteView):
     model = Status
-    template_name = 'status_delete.html'
+    template_name = 'statuses/status_delete.html'
     success_url = reverse_lazy('status_list')
 
     def test_func(self):

@@ -70,6 +70,17 @@
             <li class="nav-item">
               <a href="/about/" class="nav-link text-light px-2">О проекте</a>
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a href="/tasks/" class="nav-link text-light">Задачи</a>
+            </li>
+            <li class="nav-item">
+              <a href="/statuses/" class="nav-link text-light">Статусы</a>
+            </li>
+            <li class="nav-item">
+              <a href="/labels/" class="nav-link text-light">Метки</a>
+            </li>
+            {% endif %}
           </ul>
 
           <div class="d-md-none">
@@ -123,6 +134,17 @@
             <li class="nav-item">
               <a href="/about/" class="nav-link text-light">О проекте</a>
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a href="/tasks/" class="nav-link text-light">Задачи</a>
+            </li>
+            <li class="nav-item">
+              <a href="/statuses/" class="nav-link text-light">Статусы</a>
+            </li>
+            <li class="nav-item">
+              <a href="/labels/" class="nav-link text-light">Метки</a>
+            </li>
+            {% endif %}
           </ul>
         </div>
       </header>
