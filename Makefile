@@ -16,5 +16,5 @@ render-start:
 start:
 	python manage.py runserver
 
-test:
-	python manage.py test task_manager.tests
+test-user:
+	python manage.py test task_manager.tests.tests_user
