@@ -18,3 +18,6 @@ start:
 
 test-user:
 	python manage.py test task_manager.tests.tests_user
+
+test-status:
+	python manage.py test task_manager.tests.tests_status
