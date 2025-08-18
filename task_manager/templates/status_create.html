@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <h2 class="text-light">Создание статуса</h2>
+  <form method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="btn btn-success w-100">Создать</button>
+  </form>
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} text-light bg-secondary mt-2">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
