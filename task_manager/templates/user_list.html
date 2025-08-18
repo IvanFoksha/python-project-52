@@ -2,27 +2,41 @@
 <div class="container mt-4">
   <h2 class="text-light">Список пользователей</h2>
   {% if users %}
-  <ul class="list-group">
-    {% for user in users %}
-    <li
-      class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center"
-    >
-      {{ user.username }}
-      <div>
-        <a
-          href="{% url 'user_update' pk=user.pk %}"
-          class="btn btn-warning btn-sm me-2"
-          >Редактировать</a
-        >
-        <a
-          href="{% url 'user_delete' pk=user.pk %}"
-          class="btn btn-danger btn-sm"
-          >Удалить</a
-        >
-      </div>
-    </li>
-    {% endfor %}
-  </ul>
+  <table class="table table-dark table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Имя пользователя</th>
+        <th>Полное имя</th>
+        <th>Дата создания пользователя</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.first_name }} {{ user.last_name }}</td>
+        <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
+        <td>
+          <div class="d-flex gap-2">
+            <a
+              href="{% url 'user_update' pk=user.pk %}"
+              class="btn btn-warning btn-sm"
+              >Редактировать</a
+            >
+            <a
+              href="{% url 'user_delete' pk=user.pk %}"
+              class="btn btn-danger btn-sm"
+              >Удалить</a
+            >
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   <a href="{% url 'user_create' %}" class="btn btn-success mt-3"
     >Добавить пользователя</a
   >
