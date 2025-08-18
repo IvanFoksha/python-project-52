@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% block content %} {% csrf_token %}
 <div class="container mt-4">
   <h2 class="text-light">Список статусов</h2>
   {% if statuses %}

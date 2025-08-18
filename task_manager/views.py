@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import (
     login,
+    authenticate,
     update_session_auth_hash,
 )
 from django.views import View
@@ -167,10 +168,7 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
     fields = ['name']
 
     def test_func(self):
-        return (
-            self.request.user.is_authenticated
-            and self.request.user == self.get_object()
-        )
+        return self.request.user.is_authenticated
 
     def handle_no_permission(self):
         messages.error(
@@ -201,14 +199,11 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('status_list')
 
     def test_func(self):
-        return (
-            self.request.user.is_authenticated
-            and self.request.user == self.get_object()
-        )
+        return self.request.user.is_authenticated
 
     def handle_no_permission(self):
         messages.error(
-            self. request,
+            self.request,
             'У вас нет прав для удаления этого профиля.'
         )
         return redirect('status_list')
