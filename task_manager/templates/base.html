@@ -129,15 +129,15 @@
 
       {% if messages %} {% for message in messages %}
       <div
-        class="alert alert-{{ message.tags }} alert-dismissible fade show"
+        class="alert alert-{{ message.tags }} text-light bg-secondary mt-2"
         role="alert"
       >
         {{ message }}
         <button
           type="button"
-          class="btn-close"
+          class="btn-close btn-close-white position-absolute top-0 end-0 m-2"
           data-bs-dismiss="alert"
-          aria-label="Close"
+          aria-label="Закрыть"
         ></button>
       </div>
       {% endfor %} {% endif %}
@@ -189,9 +189,6 @@
                   Войти
                 </button>
               </form>
-              {% if messages %} {% for message in messages %}
-              <div class="alert alert-danger mt-2">{{ message }}</div>
-              {% endfor %} {% endif %}
             </div>
             <div class="modal-footer justify-content-center text-light small">
               Нет аккаунта?
