@@ -24,6 +24,10 @@ def index(request):
     return render(request, 'index.html')
 
 
+def about(request):
+    return render(request, 'about.html')
+
+
 class UserListView(ListView):
     model = User
     template_name = 'user_list.html'
