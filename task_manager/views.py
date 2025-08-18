@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import (
     ListView,
@@ -14,7 +15,6 @@ from django.contrib.auth import (
     authenticate,
     update_session_auth_hash,
 )
-from django.http import JsonResponse
 from django.views import View
 from django.contrib import messages
 from .forms import CustomUserCreationForm, UserChangeForm
@@ -31,6 +31,9 @@ class UserListView(ListView):
 
     def get_queryset(self):
         return User.objects.all()
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 
 class UserCreateView(CreateView):
@@ -69,6 +72,10 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         )
 
     def handle_no_permission(self):
+        messages.error(
+            self. request,
+            'У вас нет прав для редактированя этого профиля.'
+        )
         return redirect('user_list')
 
     def form_valid(self, form):
@@ -97,6 +104,10 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         )
 
     def handle_no_permission(self):
+        messages.error(
+            self. request,
+            'У вас нет прав для удаления этого профиля.'
+        )
         return redirect('user_list')
 
 
