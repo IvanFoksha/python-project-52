@@ -138,6 +138,16 @@ class StatusListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Необходима авторизация пользователя.'
+        )
+        return redirect('index')
+
 
 class StatusCreateView(LoginRequiredMixin, CreateView):
     model = Status
@@ -160,22 +170,22 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
         )
         return self.render_to_response(self.get_context_data(form=form))
 
-
-class StatusUpdateView(LoginRequiredMixin, UpdateView):
-    model = Status
-    template_name = 'statuses/status_update.html'
-    success_url = reverse_lazy('status_list')
-    fields = ['name']
-
     def test_func(self):
         return self.request.user.is_authenticated
 
     def handle_no_permission(self):
         messages.error(
             self.request,
-            'У вас нет прав для редактированя этого статуса.'
+            'Необходима авторизация пользователя.'
         )
-        return redirect('status_list')
+        return redirect('index')
+
+
+class StatusUpdateView(LoginRequiredMixin, UpdateView):
+    model = Status
+    template_name = 'statuses/status_update.html'
+    success_url = reverse_lazy('status_list')
+    fields = ['name']
 
     def form_valid(self, form):
         status = form.save()
@@ -192,6 +202,16 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
         )
         return self.render_to_response(self.get_context_data(form=form))
 
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Необходима авторизация пользователя.'
+        )
+        return redirect('index')
+
 
 class StatusDeleteView(LoginRequiredMixin, DeleteView):
     model = Status
@@ -204,9 +224,9 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
     def handle_no_permission(self):
         messages.error(
             self.request,
-            'У вас нет прав для удаления этого профиля.'
+            'Необходима авторизация пользователя.'
         )
-        return redirect('status_list')
+        return redirect('index')
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
