@@ -4,6 +4,7 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
+    DetailView,
 )
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
@@ -17,7 +18,7 @@ from django.contrib.auth import (
 from django.views import View
 from django.contrib import messages
 from .forms import CustomUserCreationForm, UserChangeForm
-from .models import Status
+from .models import Status, Task
 
 
 def index(request):
@@ -127,6 +128,9 @@ class CustomLoginView(View):
         return render(request, 'index.html', {'form': form})
 
 
+'''Работа с моделью - Status'''
+
+
 class StatusListView(LoginRequiredMixin, ListView):
     model = Status
     template_name = 'statuses/status_list.html'
@@ -231,8 +235,140 @@ class StatusDeleteView(LoginRequiredMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.has_related_tasks():
-            messages.error(request, 'Нельзя удалить статус, связанный с задачами.')
+            messages.error(
+                request,
+                'Нельзя удалить статус, связанный с задачами.'
+            )
             return self.render_to_response(self.get_context_data())
         self.object.delete()
-        messages.success(request, f'Статус "{self.object.name}" успешно удален!')
+        messages.success(
+            request,
+            f'Статус "{self.object.name}" успешно удален!'
+        )
+        return redirect(self.get_success_url())
+
+
+'''Работа с моделью - Task'''
+
+
+class TaskListView(LoginRequiredMixin, ListView):
+    model = Task
+    template_name = 'tasks/task_list.html'
+    context_object_name = 'tasks'
+
+    def get_queryset(self):
+        return Task.objects.all()
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Необходима авторизация пользователя.'
+        )
+        return redirect('index')
+
+
+class TaskCreateView(LoginRequiredMixin, CreateView):
+    model = Task
+    template_name = 'tasks/task_create.html'
+    fields = ['name', 'description', 'status', 'assignee']
+    success_url = reverse_lazy('task_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        task = form.save()
+        messages.success(
+            self.request,
+            f'Задача "{task.name}" успешно создана!'
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            'Ошибка создания задачи. Проверьте данные.'
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Необходима авторизация пользователя.'
+        )
+        return redirect('index')
+
+
+class TaskDetailView(LoginRequiredMixin, DetailView):
+    model = Task
+    template_name = 'tasks/task_detail.html'
+    context_object_name = 'task'
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Необходима авторизация пользователя.'
+        )
+        return redirect('index')
+
+
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = Task
+    template_name = 'tasks/task_update.html'
+    fields = ['name', 'description', 'status', 'assignee']
+    success_url = reverse_lazy('task_list')
+
+    def form_valid(self, form):
+        task = form.save()
+        messages.success(
+            self.request,
+            f'Задача "{task.name}" успешно обновлена!'
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            'Ошибка обновления задачи. Проверьте данные.'
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Необходима авторизация пользователя.'
+        )
+        return redirect('index')
+
+
+class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Task
+    template_name = 'tasks/task_delete.html'
+    success_url = reverse_lazy('task_list')
+
+    def test_func(self):
+        task = self.get_object()
+        return self.request.user == task.author
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Удаление задачи может выполнить только автор.'
+        )
+        return redirect('task_list')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        messages.success(request, f'Задача "{self.object.name}" успешно удалена!')
         return redirect(self.get_success_url())
