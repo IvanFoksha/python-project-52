@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <h2 class="text-light">Задача: {{ task.name }}</h2>
+  <p class="text-light">
+    <strong>Описание:</strong> {{ task.description|default:"Не указано" }}
+  </p>
+  <p class="text-light"><strong>Статус:</strong> {{ task.status.name }}</p>
+  <p class="text-light"><strong>Автор:</strong> {{ task.author.username }}</p>
+  <p class="text-light">
+    <strong>Исполнитель:</strong> {{ task.assignee.username|default:"Не
+    назначен" }}
+  </p>
+  <p class="text-light">
+    <strong>Дата создания:</strong> {{ task.created_at|date:"d.m.Y H:i" }}
+  </p>
+  <a href="{% url 'task_update' pk=task.pk %}" class="btn btn-warning"
+    >Изменить</a
+  >
+  {% if request.user == task.author %}
+  <a href="{% url 'task_delete' pk=task.pk %}" class="btn btn-danger"
+    >Удалить</a
+  >
+  {% endif %}
+  <a href="{% url 'task_list' %}" class="btn btn-secondary mt-2"
+    >Назад к списку</a
+  >
+</div>
+{% endblock %}

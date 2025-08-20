@@ -1,0 +1,54 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <h2 class="text-light">Список задач</h2>
+  {% if tasks %}
+  <table class="table table-dark table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Статус</th>
+        <th>Автор</th>
+        <th>Исполнитель</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+      <tr>
+        <td>{{ task.id }}</td>
+        <td>
+          <a href="{% url 'task_detail' pk=task.pk %}">{{ task.name }}</a>
+        </td>
+        <td>{{ task.status.name }}</td>
+        <td>{{ task.author.username }}</td>
+        <td>{{ task.assignee.username|default:"Не назначен" }}</td>
+        <td>
+          <a
+            href="{% url 'task_update' pk=task.pk %}"
+            class="btn btn-warning btn-sm"
+            >Изменить</a
+          >
+          {% if request.user == task.author %}
+          <a
+            href="{% url 'task_delete' pk=task.pk %}"
+            class="btn btn-danger btn-sm"
+            >Удалить</a
+          >
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'task_create' %}" class="btn btn-success mt-3"
+    >Добавить задачу</a
+  >
+  {% else %}
+  <p class="text-light">Нет задач.</p>
+  <a href="{% url 'task_create' %}" class="btn btn-success mt-3"
+    >Добавить задачу</a
+  >
+  {% endif %}
+</div>
+{% endblock %}
