@@ -2,13 +2,26 @@
 <div class="container mt-4">
   <h2 class="text-light">Редактирование статуса</h2>
   <form method="post">
-    {% csrf_token %} {{ form.as_p }}
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="id_name" class="form-label text-light"
+        >Название статуса</label
+      >
+      <input
+        type="text"
+        class="form-control bg-secondary text-light"
+        id="id_name"
+        name="name"
+        value="{{ form.name.value|default_if_none:'' }}"
+        required
+      />
+      {% if form.name.errors %}
+      <div class="alert alert-danger text-light bg-secondary mt-2">
+        {{ form.name.errors.0 }}
+      </div>
+      {% endif %}
+    </div>
     <button type="submit" class="btn btn-warning w-100">Обновить</button>
   </form>
-  {% for message in messages %}
-  <div class="alert alert-{{ message.tags }} text-light bg-secondary mt-2">
-    {{ message }}
-  </div>
-  {% endfor %}
 </div>
 {% endblock %}

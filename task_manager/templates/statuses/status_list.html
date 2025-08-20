@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %} {% csrf_token %}
+{% extends 'base.html' %} {% block content %}
 <div class="container mt-4">
   <h2 class="text-light">Список статусов</h2>
   {% if statuses %}
@@ -6,7 +6,8 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Название</th>
+        <th>Имя</th>
+        <th>Дата создания</th>
         <th>Действия</th>
       </tr>
     </thead>
@@ -15,11 +16,12 @@
       <tr>
         <td>{{ status.id }}</td>
         <td>{{ status.name }}</td>
+        <td>{{ status.created_at|date:"d.m.Y H:i" }}</td>
         <td>
           <a
             href="{% url 'status_update' pk=status.pk %}"
-            class="btn btn-warning btn-sm mb-2"
-            >Редактировать</a
+            class="btn btn-warning btn-sm"
+            >Изменить</a
           >
           <a
             href="{% url 'status_delete' pk=status.pk %}"
@@ -39,10 +41,6 @@
   <a href="{% url 'status_create' %}" class="btn btn-success mt-3"
     >Добавить статус</a
   >
-  {% endif %} {% for message in messages %}
-  <div class="alert alert-{{ message.tags }} text-light bg-secondary mt-2">
-    {{ message }}
-  </div>
-  {% endfor %}
+  {% endif %}
 </div>
 {% endblock %}
