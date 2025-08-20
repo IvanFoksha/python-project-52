@@ -305,6 +305,12 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         )
         return redirect('index')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['statuses'] = Status.objects.all()
+        context['users'] = User.objects.all()
+        return context
+
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
@@ -349,6 +355,12 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
             'Необходима авторизация пользователя.'
         )
         return redirect('index')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['statuses'] = Status.objects.all()
+        context['users'] = User.objects.all()
+        return context
 
 
 class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
