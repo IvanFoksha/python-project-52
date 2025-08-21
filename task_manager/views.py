@@ -238,18 +238,25 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             )
             return redirect('index')
         else:
+            # status = self.get_object()
             messages.error(
                 self.request,
                 'Нельзя удалить статус, связанный с задачами.'
             )
-            return redirect('status_list')
+            return redirect(self.success_url)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if not self.test_func():
+            messages.error(
+                request,
+                'Нельзя удалить статус, связанный с задачами.'
+            )
+            return redirect(self.success_url)
         self.object.delete()
         messages.success(
             request,
-            f'Статус "{self.object.name}" успешно удалена!'
+            f'Статус "{self.object.name}" успешно удален!'
         )
         return redirect(self.get_success_url())
 
