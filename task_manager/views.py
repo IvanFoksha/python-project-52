@@ -7,6 +7,7 @@ from django.views.generic import (
     DetailView,
 )
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.forms import AuthenticationForm
@@ -220,33 +221,35 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
         return redirect('index')
 
 
-class StatusDeleteView(LoginRequiredMixin, DeleteView):
+class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Status
     template_name = 'statuses/status_delete.html'
     success_url = reverse_lazy('status_list')
 
     def test_func(self):
-        return self.request.user.is_authenticated
+        status = self.get_object()
+        return not status.has_related_tasks()
 
     def handle_no_permission(self):
-        messages.error(
-            self.request,
-            'Необходима авторизация пользователя.'
-        )
-        return redirect('index')
+        if not self.request.user.is_authenticated:
+            messages.error(
+                self.request,
+                'Необходима авторизация пользователя.'
+            )
+            return redirect('index')
+        else:
+            messages.error(
+                self.request,
+                'Нельзя удалить статус, связанный с задачами.'
+            )
+            return redirect('status_list')
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if self.object.has_related_tasks():
-            messages.error(
-                request,
-                'Нельзя удалить статус, связанный с задачами.'
-            )
-            return self.render_to_response(self.get_context_data())
         self.object.delete()
         messages.success(
             request,
-            f'Статус "{self.object.name}" успешно удален!'
+            f'Статус "{self.object.name}" успешно удалена!'
         )
         return redirect(self.get_success_url())
 
@@ -433,6 +436,7 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('label_list')
 
     def form_valid(self, form):
+        form.instance.created_at = timezone.now()
         label = form.save()
         messages.success(
             self.request,
@@ -456,12 +460,9 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
             'Необходима авторизация пользователя.'
         )
         return redirect('index')
-#
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['statuses'] = Status.objects.all()
-    #     context['users'] = User.objects.all()
-    #     return context
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 
 class LabelUpdateView(LoginRequiredMixin, UpdateView):
