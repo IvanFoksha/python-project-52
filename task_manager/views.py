@@ -279,7 +279,7 @@ class TaskListView(LoginRequiredMixin, ListView):
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     template_name = 'tasks/task_create.html'
-    fields = ['name', 'description', 'status', 'assignee']
+    fields = ['name', 'description', 'status', 'assignee', 'labels']
     success_url = reverse_lazy('task_list')
 
     def form_valid(self, form):
@@ -312,6 +312,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['statuses'] = Status.objects.all()
         context['users'] = User.objects.all()
+        context['labels'] = Label.objects.all()
         return context
 
 
@@ -331,7 +332,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
     template_name = 'tasks/task_update.html'
-    fields = ['name', 'description', 'status', 'assignee']
+    fields = ['name', 'description', 'status', 'assignee', 'labels']
     success_url = reverse_lazy('task_list')
 
     def form_valid(self, form):
@@ -363,6 +364,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['statuses'] = Status.objects.all()
         context['users'] = User.objects.all()
+        context['labels'] = Label.objects.all()
         return context
 
 
