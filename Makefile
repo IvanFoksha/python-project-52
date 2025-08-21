@@ -24,3 +24,6 @@ test-status:
 
 test-task:
 	python manage.py test task_manager.tests.tests_task
+
+test-label:
+	python manage.py test task_manager.tests.tests_label
