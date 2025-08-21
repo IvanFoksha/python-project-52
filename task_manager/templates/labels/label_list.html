@@ -1,0 +1,46 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-4">
+  <h2 class="text-light">Список меток</h2>
+  {% if labels %}
+  <table class="table table-dark table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Дата создания</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for label in labels %}
+      <tr>
+        <td>{{ label.id }}</td>
+        <td>{{ label.name }}</td>
+        <td>{{ status.created_at|date:"d.m.Y H:i" }}</td>
+        <td>
+          <a
+            href="{% url 'label_update' pk=label.pk %}"
+            class="btn btn-warning btn-sm"
+            >Изменить</a
+          >
+          <a
+            href="{% url 'label_delete' pk=label.pk %}"
+            class="btn btn-danger btn-sm"
+            >Удалить</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'label_create' %}" class="btn btn-success mt-3"
+    >Добавить метку</a
+  >
+  {% else %}
+  <p class="text-light">Нет меток.</p>
+  <a href="{% url 'label_create' %}" class="btn btn-success mt-3"
+    >Добавить метку</a
+  >
+  {% endif %}
+</div>
+{% endblock %}

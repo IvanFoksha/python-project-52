@@ -42,6 +42,17 @@
         <div class="alert alert-danger text-light bg-secondary mt-2">{{ form.assignee.errors.0 }}</div>
       {% endif %}
     </div>
+    <div class="mb-3">
+      <label for="id_labels" class="form-label text-light">Метки</label>
+      <select class="form-select bg-secondary text-light" id="id_labels" name="labels" multiple>
+        {% for label in labels %}
+          <option value="{{ label.pk }}" {% if label in form.instance.labels.all %}selected{% endif %}>{{ label.name }}</option>
+        {% endfor %}
+      </select>
+      {% if form.labels.errors %}
+        <div class="alert alert-danger text-light bg-secondary mt-2">{{ form.labels.errors.0 }}</div>
+      {% endif %}
+    </div>
     <button type="submit" class="btn btn-warning w-100">Обновить</button>
   </form>
 </div>

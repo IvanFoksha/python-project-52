@@ -12,6 +12,14 @@
   <p class="text-light">
     <strong>Дата создания:</strong> {{ task.created_at|date:"d.m.Y H:i" }}
   </p>
+  <p class="text-light">
+    <strong>Метки:</strong>
+    <ul>
+      <li>
+        {{ task.labels.name|default:"Не назначено" }}
+      </li>
+    </ul>
+  </p>
   <a href="{% url 'task_update' pk=task.pk %}" class="btn btn-warning"
     >Изменить</a
   >

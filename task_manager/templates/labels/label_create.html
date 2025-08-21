@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-light">Создание метки</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="id_name" class="form-label text-light">Название метки</label>
+      <input type="text" class="form-control bg-secondary text-light" id="id_name" name="name" value="{{ form.name.value|default_if_none:'' }}" required>
+      {% if form.name.errors %}
+        <div class="alert alert-danger text-light bg-secondary mt-2">{{ form.name.errors.0 }}</div>
+      {% endif %}
+    </div>
+    <button type="submit" class="btn btn-success w-100">Создать</button>
+  </form>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
