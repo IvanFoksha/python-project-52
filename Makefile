@@ -21,3 +21,6 @@ test-user:
 
 test-status:
 	python manage.py test task_manager.tests.tests_status
+
+test-task:
+	python manage.py test task_manager.tests.tests_task
