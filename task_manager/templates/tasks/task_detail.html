@@ -7,8 +7,7 @@
   <p class="text-light"><strong>Статус:</strong> {{ task.status.name }}</p>
   <p class="text-light"><strong>Автор:</strong> {{ task.author.username }}</p>
   <p class="text-light">
-    <strong>Исполнитель:</strong> {{ task.assignee.username|default:"Не
-    назначен" }}
+    <strong>Исполнитель:</strong> {{ task.assignee|default:"Не назначен" }}
   </p>
   <p class="text-light">
     <strong>Дата создания:</strong> {{ task.created_at|date:"d.m.Y H:i" }}
