@@ -373,14 +373,24 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == task.author
 
     def handle_no_permission(self):
-        messages.error(
+        if not self.request.user.is_authenticated:
+            messages.error(
             self.request,
-            'Удаление задачи может выполнить только автор.'
-        )
-        return redirect('task_list')
+            'Необходима авторизация пользователя.'
+            )
+            return redirect('index')
+        else:
+            messages.error(
+                self.request,
+                'Удаление задачи может выполнить только автор.'
+            )
+            return redirect('task_list')
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()
-        messages.success(request, f'Задача "{self.object.name}" успешно удалена!')
+        messages.success(
+            request,
+            f'Задача "{self.object.name}" успешно удалена!'
+        )
         return redirect(self.get_success_url())
