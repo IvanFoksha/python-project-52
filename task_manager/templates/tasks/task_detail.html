@@ -15,9 +15,13 @@
   <p class="text-light">
     <strong>Метки:</strong>
     <ul>
-      <li>
-        {{ task.labels.name|default:"Не назначено" }}
-      </li>
+      {% if task.labels.all %}
+        {% for label in task.labels.all %}
+          <li>{{ label.name }}</li>
+        {% endfor %}
+      {% else %}
+        <li>Не назначено</li>
+      {% endif %}
     </ul>
   </p>
   <a href="{% url 'task_update' pk=task.pk %}" class="btn btn-warning"
