@@ -18,7 +18,7 @@ from django.contrib.auth import (
 from django.views import View
 from django.contrib import messages
 from .forms import CustomUserCreationForm, UserChangeForm
-from .models import Status, Task
+from .models import Status, Task, Label
 
 
 def index(request):
@@ -27,6 +27,9 @@ def index(request):
 
 def about(request):
     return render(request, 'about.html')
+
+
+'''Работа с моделью - User'''
 
 
 class UserListView(ListView):
@@ -375,8 +378,8 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
             messages.error(
-            self.request,
-            'Необходима авторизация пользователя.'
+                self.request,
+                'Необходима авторизация пользователя.'
             )
             return redirect('index')
         else:
@@ -392,5 +395,139 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         messages.success(
             request,
             f'Задача "{self.object.name}" успешно удалена!'
+        )
+        return redirect(self.get_success_url())
+
+
+'''Работа с моделью - Status'''
+
+
+class LabelListView(LoginRequiredMixin, ListView):
+    model = Label
+    template_name = 'labels/label_list.html'
+    context_object_name = 'labels'
+
+    def get_queryset(self):
+        return Label.objects.all()
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Необходима авторизация пользователя.'
+        )
+        return redirect('index')
+
+
+class LabelCreateView(LoginRequiredMixin, CreateView):
+    model = Label
+    template_name = 'labels/label_create.html'
+    fields = ['name']
+    success_url = reverse_lazy('label_list')
+
+    def form_valid(self, form):
+        label = form.save()
+        messages.success(
+            self.request,
+            f'Метка "{label.name}" успешно создана!'
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            'Ошибка создания метки. Проверьте данные.'
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Необходима авторизация пользователя.'
+        )
+        return redirect('index')
+#
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['statuses'] = Status.objects.all()
+    #     context['users'] = User.objects.all()
+    #     return context
+
+
+class LabelUpdateView(LoginRequiredMixin, UpdateView):
+    model = Label
+    template_name = 'labels/label_update.html'
+    fields = ['name']
+    success_url = reverse_lazy('label_list')
+
+    def form_valid(self, form):
+        label = form.save()
+        messages.success(
+            self.request,
+            f'Метка "{label.name}" успешно обновлена!'
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            'Ошибка обновления метки. Проверьте данные.'
+        )
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def handle_no_permission(self):
+        messages.error(
+            self.request,
+            'Необходима авторизация пользователя.'
+        )
+        return redirect('index')
+#
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['statuses'] = Status.objects.all()
+    #     context['users'] = User.objects.all()
+    #     return context
+
+
+class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Label
+    template_name = 'labels/label_delete.html'
+    success_url = reverse_lazy('label_list')
+
+    def test_func(self):
+        label = self.get_object()
+        return not label.has_related_tasks()
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            messages.error(
+                self.request,
+                'Необходима авторизация пользователя.'
+            )
+            return redirect('index')
+        else:
+            messages.error(
+                self.request,
+                'Нельзя удалить метку, связанную с задачами.'
+            )
+            return redirect('label_list')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        messages.success(
+            request,
+            f'Метка "{self.object.name}" успешно удалена!'
         )
         return redirect(self.get_success_url())
