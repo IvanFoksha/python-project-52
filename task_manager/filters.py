@@ -17,7 +17,8 @@ class TaskFilter(django_filters.FilterSet):
     label = django_filters.ModelChoiceFilter(
         queryset=Label.objects.all(),
         label='Метка',
-        empty_label='Все метки'
+        empty_label='Все метки',
+        required=False
     )
     own_tasks = django_filters.BooleanFilter(
         label='Только свои задачи',
@@ -31,8 +32,13 @@ class TaskFilter(django_filters.FilterSet):
 
     def filter_own_tasks(self, queryset, name, value):
         if value and self.request.user.is_authenticated:
-            return queryset.filter(authors=self.request.user)
+            return queryset.filter(author=self.request.user)
         return queryset
+
+    # def filter_label(self, queryset, name, value):
+    #     if value:
+    #         return queryset.filter(labels__in=value).distinct()
+    #     return queryset
 
     @property
     def qs(self):

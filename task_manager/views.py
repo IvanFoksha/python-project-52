@@ -18,6 +18,8 @@ from django.contrib.auth import (
 )
 from django.views import View
 from django.contrib import messages
+from django_filters.views import FilterView
+from .filters import TaskFilter
 from .forms import CustomUserCreationForm, UserChangeForm
 from .models import Status, Task, Label
 
@@ -264,16 +266,21 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 '''Работа с моделью - Task'''
 
 
-class TaskListView(LoginRequiredMixin, ListView):
+class TaskListView(LoginRequiredMixin, FilterView):
     model = Task
     template_name = 'tasks/task_list.html'
     context_object_name = 'tasks'
+    filterset_class = TaskFilter
 
     def get_queryset(self):
-        return Task.objects.all()
+        return Task.objects.select_related('status', 'author', 'assignee').prefetch_related('labels')
 
     def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        context['statuses'] = Status.objects.all()
+        context['users'] = User.objects.all()
+        context['labels'] = Label.objects.all()
+        return context
 
     def test_func(self):
         return self.request.user.is_authenticated
@@ -502,12 +509,6 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
             'Необходима авторизация пользователя.'
         )
         return redirect('index')
-#
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['statuses'] = Status.objects.all()
-    #     context['users'] = User.objects.all()
-    #     return context
 
 
 class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
