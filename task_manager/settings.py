@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'task_manager',
     'django_bootstrap5',
-    'django-filters',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
