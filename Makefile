@@ -27,3 +27,6 @@ test-task:
 
 test-label:
 	python manage.py test task_manager.tests.tests_label
+
+test-filter:
+	python manage.py test task_manager.tests.tests_filters
