@@ -282,6 +282,11 @@ class TaskListView(LoginRequiredMixin, FilterView):
         context['labels'] = Label.objects.all()
         return context
 
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        kwargs['request'] = self.request
+        return kwargs
+
     def test_func(self):
         return self.request.user.is_authenticated
 
