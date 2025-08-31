@@ -6,7 +6,6 @@
     <form method="get" style="display: flex; flex-direction: column; gap: 1rem;">
       <div class="mb-0">
         <label class="form-label text-light" for="id_status">Статус</label>
-        <!-- prettier-ignore -->
         <select name="status" class="form-select bg-secondary text-light" id="id_status" style="min-width: 200px;">
           <option value="">Выберите статус</option>
           {% for status in statuses %}
@@ -16,7 +15,6 @@
       </div>
       <div class="mb-0">
         <label class="form-label text-light" for="id_assignee">Исполнитель</label>
-        <!-- prettier-ignore -->
         <select name="assignee" class="form-select bg-secondary text-light" id="id_assignee" style="min-width: 200px;">
           <option value="">Не назначен</option>
           {% for user in users %}
@@ -26,11 +24,10 @@
       </div>
       <div class="mb-0">
         <label class="form-label text-light" for="id_label">Метка</label>
-        <!-- prettier-ignore -->
-        <select name="label" class="form-select bg-secondary text-light" id="id_label" style="min-width: 200px;">
+        <select name="labels" class="form-select bg-secondary text-light" id="id_label" style="min-width: 200px;">
           <option value="">Выберите метку</option>
           {% for label in labels %}
-            <option value="{{ label.pk }}" {% if request.GET.label == label.pk|stringformat:"s" %}selected{% endif %}>{{ label.name }}</option>
+            <option value="{{ label.pk }}" {% if request.GET.labels == label.pk|stringformat:"s" %}selected{% endif %}>{{ label.name }}</option>
           {% endfor %}
         </select>
       </div>
