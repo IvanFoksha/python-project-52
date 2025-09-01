@@ -21,24 +21,19 @@ class TaskFilter(django_filters.FilterSet):
         label='Только свои задачи',
         method='filter_own_tasks',
         widget=django_filters.widgets.BooleanWidget,
+        field_name=None,
     )
 
     class Meta:
         model = Task
-        fields = ['status', 'assignee', 'labels']
+        fields = ['status', 'assignee', 'labels', 'own_tasks']
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
 
     def filter_own_tasks(self, queryset, name, value):
+        # author = self.request.user.pk if self.request.user == self.task.author else None
         if value and self.request and self.request.user.is_authenticated:
-            return queryset.filter(author=self.request.user)
+            return queryset.filter(author=self.request.task.author) # =author -- попытался даже сравнить с author в модели Task
         return queryset
-
-    # def filter_labels(self, queryset, name, value):
-    #     if value:
-    #         if not isinstance(value, (list, tuple)):
-    #             value = [value]
-    #         return queryset.filter(labels__in=value).distinct()
-    #     return queryset

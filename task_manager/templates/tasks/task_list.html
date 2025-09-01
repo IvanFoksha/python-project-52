@@ -24,7 +24,7 @@
       </div>
       <div class="mb-0">
         <label class="form-label text-light" for="id_label">Метка</label>
-        <select name="labels" class="form-select bg-secondary text-light" id="id_label" style="min-width: 200px;">
+        <select name="labels" class="form-select bg-secondary text-light" id="id_label" style="min-width: 200px;" multiple>
           <option value="">Выберите метку</option>
           {% for label in labels %}
             <option value="{{ label.pk }}" {% if request.GET.labels == label.pk|stringformat:"s" %}selected{% endif %}>{{ label.name }}</option>
