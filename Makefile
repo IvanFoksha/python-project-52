@@ -17,7 +17,7 @@ start:
 	python manage.py runserver
 
 test-user:
-	python manage.py test task_manager.tests.tests_user
+	python manage.py test task_manager.users.tests_user
 
 test-status:
 	python manage.py test task_manager.tests.tests_status
