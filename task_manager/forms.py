@@ -23,18 +23,28 @@ class CustomUserCreationForm(forms.ModelForm):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         password_confirm = cleaned_data.get("password_confirm")
-        if password != password_confirm:
+        if password and password_confirm and password != password_confirm:
             raise ValidationError("Пароли не совпадают.")
-        if len(password) < 8 or not any(
-            c.isupper() for c in password
-        ) or not any(
-            c.isdigit() for c in password
-        ):
-            raise ValidationError(
-                '''Пароль должен содержать минимум 8 символов,
-                включая заглавную букву и цифру.
-                '''
-            )
+
+        if password:  # Проверяем, что password не None
+            if len(password) < 8 or not any(c.isupper() for c in password):
+                raise ValidationError(
+                    '''Пароль должен содержать минимум 8 символов,
+                    включая заглавную букву и цифру.
+                    '''
+                )
+        # if password != password_confirm:
+        #     raise ValidationError("Пароли не совпадают.")
+        # if len(password) < 8 or not any(
+        #     c.isupper() for c in password
+        # ) or not any(
+        #     c.isdigit() for c in password
+        # ):
+        #     raise ValidationError(
+        #         '''Пароль должен содержать минимум 8 символов,
+        #         включая заглавную букву и цифру.
+        #         '''
+        #     )
         return cleaned_data
 
     def save(self, commit=True):
