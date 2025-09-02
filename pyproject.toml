@@ -12,7 +12,7 @@ dependencies = [
     "django-filter>=23.5",
     "gunicorn==23.0.0",
     "python-dotenv==1.0.1",
-    "dj-database-url==2.2.0",
+    "dj-database-url>=2.2.0",
     "psycopg==3.2.2",
     "django-bootstrap5>=25.2",
     "rollbar>=1.0.0",
