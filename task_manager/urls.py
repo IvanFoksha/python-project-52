@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 from task_manager.views import (
     index,
     about,
+    TestErrorView,
     UserListView,
     UserCreateView,
     UserUpdateView,
@@ -89,4 +90,5 @@ urlpatterns = [
         LabelDeleteView.as_view(),
         name='label_delete'
     ),
+    path('test-error/', TestErrorView.as_view(), name='test_error'),
 ]

@@ -6,9 +6,10 @@ from django.views.generic import (
     DeleteView,
     DetailView,
 )
-from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse_lazy
+from django.http import HttpResponse, HttpResponseServerError
+from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import (
@@ -22,6 +23,7 @@ from django_filters.views import FilterView
 from .filters import TaskFilter
 from .forms import CustomUserCreationForm, UserChangeForm
 from .models import Status, Task, Label
+import rollbar
 
 
 def index(request):
@@ -30,6 +32,18 @@ def index(request):
 
 def about(request):
     return render(request, 'about.html')
+
+
+class TestErrorView(View):
+    def get(self, request):
+        a = None
+        a.hello()  # Искусственная ошибка
+        return HttpResponse("Hello, world")
+
+
+def handler500(request):
+    rollbar.report_exc_info(request=request)
+    return HttpResponseServerError("Произошла ошибка на сервере.")
 
 
 '''Работа с моделью - User'''
