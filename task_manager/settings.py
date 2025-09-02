@@ -70,28 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
-DATABASE_URL = os.getenv('DATABASE_URL')
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('POSTGRES_DB', 'mydb'),
-            'USER': os.getenv('POSTGRES_USER', 'myuser'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'mypassword'),
-            'HOST': os.getenv('POSTGRES_HOST', 'db'),
-            'PORT': os.getenv('POSTGRES_PORT', '5432'),
-        }
-    }
-
-# PostgreSQL для Render, SQLite для локальной разработки
 # DATABASE_URL = os.getenv('DATABASE_URL')
 # if DATABASE_URL:
 #     DATABASES = {
@@ -104,10 +82,32 @@ else:
 # else:
 #     DATABASES = {
 #         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': os.getenv('POSTGRES_DB', 'mydb'),
+#             'USER': os.getenv('POSTGRES_USER', 'myuser'),
+#             'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'mypassword'),
+#             'HOST': os.getenv('POSTGRES_HOST', 'db'),
+#             'PORT': os.getenv('POSTGRES_PORT', '5432'),
 #         }
 #     }
+
+# PostgreSQL для Render, SQLite для локальной разработки
+DATABASE_URL = os.getenv('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # SQLite для локальной разработки
 
