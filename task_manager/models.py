@@ -45,7 +45,6 @@ class Task(models.Model):
         blank=True,
         help_text='Метки задачи'
     )
-    own_tasks = models.BooleanField(default=False) # решил попробовать добавить поле в модель Task с булевым значением для фильтрации задач автора
 
     def __str__(self):
         return self.name
@@ -53,9 +52,6 @@ class Task(models.Model):
     class Meta:
         verbose_name = 'Задача'
         verbose_name_plural = 'Задачи'
-
-    # Также пытался добавить сюда метод внутренний для фильтрации, но не вышло
-    # def filter_own_tasks(self, user):
 
 
 class Label(models.Model):

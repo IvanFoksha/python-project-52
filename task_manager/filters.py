@@ -1,4 +1,5 @@
 import django_filters
+from django import forms
 from django.contrib.auth.models import User
 from .models import Task, Status, Label
 
@@ -20,20 +21,20 @@ class TaskFilter(django_filters.FilterSet):
     own_tasks = django_filters.BooleanFilter(
         label='Только свои задачи',
         method='filter_own_tasks',
-        widget=django_filters.widgets.BooleanWidget,
+        widget=forms.CheckboxInput,
         field_name=None,
     )
 
-    class Meta:
-        model = Task
-        fields = ['status', 'assignee', 'labels', 'own_tasks']
-
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
+        self.request = kwargs.get('request', None)
         super().__init__(*args, **kwargs)
 
     def filter_own_tasks(self, queryset, name, value):
-        # author = self.request.user.pk if self.request.user == self.task.author else None
-        if value and self.request and self.request.user.is_authenticated:
-            return queryset.filter(author=self.request.task.author) # =author -- попытался даже сравнить с author в модели Task
+        if value and self.request:
+            filtered_qs = queryset.filter(author=self.request.user)
+            return filtered_qs
         return queryset
+
+    class Meta:
+        model = Task
+        fields = ['status', 'assignee', 'labels']

@@ -273,7 +273,7 @@ class TaskListView(LoginRequiredMixin, FilterView):
     filterset_class = TaskFilter
 
     def get_queryset(self):
-        return Task.objects.select_related('status', 'author', 'assignee').prefetch_related('labels')
+        return Task.objects.all().select_related('status', 'author', 'assignee').prefetch_related('labels')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -286,6 +286,10 @@ class TaskListView(LoginRequiredMixin, FilterView):
         kwargs = super().get_filterset_kwargs(filterset_class)
         kwargs['request'] = self.request
         return kwargs
+
+    def get_filterset(self, filterset_class):
+        filterset = super().get_filterset(filterset_class)
+        return filterset
 
     def test_func(self):
         return self.request.user.is_authenticated
