@@ -1,17 +1,18 @@
 import unittest
 from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth.models import User
+from .models import User
 from django.contrib.messages import get_messages
+from django.contrib.auth.hashers import make_password
 
 
 class UserCRUDTests(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.user = User.objects.create_user(
+        self.user = User.objects.create(
             username='testuser',
-            password='TestPass123',
+            password=make_password('TestPass123'),
             first_name='Test',
             last_name='User'
         )
@@ -24,8 +25,8 @@ class UserCRUDTests(TestCase):
             'username': 'newuser',
             'first_name': 'New',
             'last_name': 'User',
-            'password': 'NewPass123',
-            'password_confirm': 'NewPass123'
+            'password1': 'NewPass123',
+            'password2': 'NewPass123'
         }
         response = self.client.post(self.create_url, form_data)
         self.assertEqual(response.status_code, 302)
@@ -40,8 +41,8 @@ class UserCRUDTests(TestCase):
             'username': 'invaliduser',
             'first_name': 'Invalid',
             'last_name': 'User',
-            'password': 'short',
-            'password_confirm': 'short'
+            'password1': 'short',
+            'password2': 'short'
         }
         response = self.client.post(self.create_url, form_data)
         self.assertEqual(response.status_code, 200)
@@ -54,8 +55,8 @@ class UserCRUDTests(TestCase):
             'username': 'updateduser',
             'first_name': 'Updated',
             'last_name': 'User',
-            'password': 'UpdatedPass123',
-            'password_confirm': 'UpdatedPass123'
+            'password1': 'UpdatedPass123',
+            'password2': 'UpdatedPass123'
         }
         response = self.client.post(self.update_url, form_data)
         self.assertEqual(response.status_code, 302)
@@ -71,7 +72,7 @@ class UserCRUDTests(TestCase):
         self.client.login(username='testuser', password='TestPass123')
         another_user = User.objects.create_user(
             username='anotheruser',
-            password='AnotherPass123',
+            password=make_password('AnotherPass123'),
             first_name='Another',
             last_name='User'
         )
@@ -91,7 +92,7 @@ class UserCRUDTests(TestCase):
     def test_delete_user_unauthorized(self):
         another_user = User.objects.create_user(
             username='anotheruser',
-            password='AnotherPass123',
+            password=make_password('AnotherPass123'),
             first_name='Another',
             last_name='User'
         )
