@@ -20,13 +20,13 @@ test-user:
 	python manage.py test task_manager.users.tests_user
 
 test-status:
-	python manage.py test task_manager.tests.tests_status
+	python manage.py test task_manager.statuses.tests_status
 
 test-task:
-	python manage.py test task_manager.tests.tests_task
+	python manage.py test task_manager.tasks.tests_task
 
 test-label:
-	python manage.py test task_manager.tests.tests_label
+	python manage.py test task_manager.labels.tests_label
 
 test-filter:
-	python manage.py test task_manager.tests.tests_filters
+	python manage.py test task_manager.tasks.tests_filters
