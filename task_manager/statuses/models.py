@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
-from task_manager.tasks.models import Task
+# from task_manager.tasks.models import Task
 
 
 class Status(models.Model):
@@ -15,6 +14,7 @@ class Status(models.Model):
         return self.name
 
     def has_related_tasks(self):
+        from task_manager.tasks.models import Task
         return Task.objects.filter(status=self).exists()
 
     class Meta:

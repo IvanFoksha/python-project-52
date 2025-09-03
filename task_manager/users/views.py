@@ -6,14 +6,13 @@ from django.views.generic import (
     DeleteView,
 )
 from django.urls import reverse_lazy
-from .models import User
+from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import (
     login,
     authenticate,
     update_session_auth_hash,
 )
-from django.views import View
 from django.contrib import messages
 from task_manager.users.forms import CustomUserCreationForm, UserChangeForm
 

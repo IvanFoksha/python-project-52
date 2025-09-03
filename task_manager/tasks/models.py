@@ -1,13 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
-from task_manager.statuses.models import Status
 
 
 class Task(models.Model):
     name = models.CharField(max_length=200, help_text='Название задачи')
     description = models.TextField(blank=True, help_text='Описание задачи')
     status = models.ForeignKey(
-        Status,
+        "statuses.Status",
         on_delete=models.PROTECT,
         help_text='Статус задачи'
     )
@@ -27,7 +26,7 @@ class Task(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     labels = models.ManyToManyField(
-        'Label',
+        'labels.Label',
         blank=True,
         help_text='Метки задачи'
     )

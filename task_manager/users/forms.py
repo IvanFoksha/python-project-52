@@ -1,15 +1,15 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+# from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
 
-class CustomUserCreationForm(UserCreationForm):
+class CustomUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(
         widget=forms.PasswordInput,
         label="Пароль",
-        required=True,
-        help_text="Пароль должен содержать минимум 8 символов, включая заглавную букву и цифру."
+        required=True
+        # help_text="Пароль должен содержать минимум 8 символов, включая заглавную букву и цифру."
     )
     password2 = forms.CharField(
         widget=forms.PasswordInput,
@@ -22,7 +22,8 @@ class CustomUserCreationForm(UserCreationForm):
         fields = [
             'username',
             'first_name',
-            'last_name'
+            'last_name',
+            'password'
         ]
 
     def clean(self):
@@ -65,7 +66,12 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name']
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'password'
+        ]
 
     def clean(self):
         cleaned_data = super().clean()

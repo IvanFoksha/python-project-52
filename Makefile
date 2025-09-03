@@ -17,16 +17,18 @@ start:
 	python manage.py runserver
 
 test-user:
-	python manage.py test task_manager.users.tests_user
+	python manage.py test task_manager.users.tests
 
-test-status:
-	python manage.py test task_manager.statuses.tests_status
+test-statuses:
+	python manage.py test task_manager.statuses
 
-test-task:
-	python manage.py test task_manager.tasks.tests_task
+test-labels:
+	python manage.py test task_manager.labels
 
-test-label:
-	python manage.py test task_manager.labels.tests_label
+test-tasks:
+	python manage.py test task_manager.tasks
 
 test-filter:
 	python manage.py test task_manager.tasks.tests_filters
+
+# test-all: test-user test-statuses test-tasks test-labels test-filter
