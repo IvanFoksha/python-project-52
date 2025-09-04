@@ -67,7 +67,7 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def handle_no_permission(self):
         messages.error(
             self.request,
-            'У вас нет прав для редактированя этого профиля.'
+            'У вас нет прав для редактирования этого профиля.'
         )
         return redirect('user_list')
 
@@ -102,3 +102,8 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             'У вас нет прав для удаления этого профиля.'
         )
         return redirect('user_list')
+
+    def form_valid(self, form):
+        user = self.get_object()
+        messages.success(self.request, f'Пользователь {user.username} успешно удален!')
+        return super().form_valid(form)

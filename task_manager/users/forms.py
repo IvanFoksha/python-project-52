@@ -71,7 +71,8 @@ class UserChangeForm(forms.ModelForm):
             'username',
             'first_name',
             'last_name',
-            'password'
+            'password1',
+            'password2'
         ]
 
     def clean(self):
