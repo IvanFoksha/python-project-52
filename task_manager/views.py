@@ -28,6 +28,11 @@ def handler500(request):
 
 
 class CustomLoginView(View):
+
+    def get(self, request, *args, **kwargs):
+        form = AuthenticationForm()
+        return render(request, 'index.html', {'form': form})
+
     def post(self, request, *args, **kwargs):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
