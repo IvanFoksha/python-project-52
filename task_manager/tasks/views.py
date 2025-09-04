@@ -189,7 +189,7 @@ from django.views.generic import (
     DeleteView,
 )
 from django_filters.views import FilterView
-# from task_manager.tasks.filters import TaskFilter  # Импорт фабрики
+from task_manager.tasks.filters import TaskFilter
 from task_manager.tasks.models import Task
 
 
@@ -197,14 +197,14 @@ class TaskListView(LoginRequiredMixin, FilterView):
     model = Task
     template_name = 'tasks/task_list.html'
     context_object_name = 'tasks'
-    # filterset_class = TaskFilter
+    filterset_class = TaskFilter
 
     def get_queryset(self):
         return Task.objects.all().select_related('status', 'author', 'assignee').prefetch_related('labels')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['filter'] = self.filterset  # Передаем фильтр в шаблон
+        context['filter'] = self.filterset  # Передаем фильтр в шаблон
         context['statuses'] = Task._meta.get_field('status').remote_field.model.objects.all()
         context['users'] = User.objects.all()
         context['labels'] = Task._meta.get_field('labels').remote_field.model.objects.all()
