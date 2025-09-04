@@ -2,12 +2,13 @@ import unittest
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from task_manager.models import Status, Task, Label
+from task_manager.statuses.models import Status
+from task_manager.tasks.models import Task
+from task_manager.labels.models import Label
 from django.contrib.messages import get_messages
 
 
-class StatusCRUDTests(TestCase):
-
+class StatusTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(
@@ -24,14 +25,8 @@ class StatusCRUDTests(TestCase):
         self.label = Label.objects.create(name='Тестовая метка')
         self.status_list_url = reverse('status_list')
         self.status_create_url = reverse('status_create')
-        self.status_update_url = reverse(
-            'status_update',
-            kwargs={'pk': self.status.pk}
-        )
-        self.status_delete_url = reverse(
-            'status_delete',
-            kwargs={'pk': self.status.pk}
-        )
+        self.status_update_url = reverse('status_update', kwargs={'pk': self.status.pk})
+        self.status_delete_url = reverse('status_delete', kwargs={'pk': self.status.pk})
         self.index_url = reverse('index')
 
     def test_status_list_view(self):
@@ -94,7 +89,7 @@ class StatusCRUDTests(TestCase):
         self.client.login(username='testuser', password='TestPass123')
         status = Status.objects.create(name='Удаляемый статус')
         delete_url = reverse('status_delete', kwargs={'pk': status.pk})
-        response = self.client.post(delete_url)
+        response = self.client.post(delete_url, {'confirm': True})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.status_list_url)
         self.assertFalse(Status.objects.filter(pk=status.pk).exists())
@@ -104,24 +99,22 @@ class StatusCRUDTests(TestCase):
 
     def test_status_delete_with_task(self):
         self.client.login(username='testuser', password='TestPass123')
-        response = self.client.post(self.status_delete_url)
+        response = self.client.post(self.status_delete_url, {'confirm': True})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.status_list_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn(
-            'Нельзя удалить статус, связанный с задачами.',
-            str(messages[0])
-        )
+        self.assertIn('Нельзя удалить статус, связанный с задачами', str(messages[0]))
         self.assertTrue(Status.objects.filter(pk=self.status.pk).exists())
 
     def test_status_delete_unauthorized(self):
-        response = self.client.post(self.status_delete_url)
+        response = self.client.post(self.status_delete_url, {'confirm': True})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.index_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertIn('Необходима авторизация пользователя', str(messages[0]))
+        self.assertTrue(Status.objects.filter(pk=self.status.pk).exists())
 
 
 if __name__ == '__main__':

@@ -133,4 +133,4 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             request,
             f'Статус "{self.object.name}" успешно удален!'
         )
-        return redirect(self.get_success_url())
+        return redirect(self.success_url)
