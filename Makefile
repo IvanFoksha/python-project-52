@@ -16,14 +16,14 @@ render-start:
 start:
 	python manage.py runserver
 
-test-user:
+test-users:
 	python manage.py test task_manager.users.tests
 
 test-statuses:
-	python manage.py test task_manager.statuses
+	python manage.py test task_manager.statuses.tests
 
 test-labels:
-	python manage.py test task_manager.labels
+	python manage.py test task_manager.labels.tests
 
 test-tasks:
 	python manage.py test task_manager.tasks.tests
