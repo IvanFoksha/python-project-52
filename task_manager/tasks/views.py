@@ -1,20 +1,9 @@
+# from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.contrib import messages
-# from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-# from django.contrib.auth.models import User
 # from django.shortcuts import redirect
-# from django.urls import reverse_lazy
-# from django.views.generic import (
-#     CreateView,
-#     DetailView,
-#     UpdateView,
-#     DeleteView
-# )
 # from django_filters.views import FilterView
-# from task_manager.tasks.filters import TaskFilter
-# from task_manager.tasks.models import Task
-# # from task_manager.statuses.models import Status
-# # from task_manager.labels.models import Label
-
+# from .models import Task
+# from .filters import TaskFilter
 
 # class TaskListView(LoginRequiredMixin, FilterView):
 #     model = Task
@@ -23,22 +12,30 @@
 #     filterset_class = TaskFilter
 
 #     def get_queryset(self):
-#         return Task.objects.all().select_related('status', 'author', 'assignee').prefetch_related('labels')
+#         print("View called, GET params:", self.request.GET)
+#         queryset = Task.objects.all().select_related('status', 'author', 'assignee').prefetch_related('labels')
+#         if self.request.GET.get('own_tasks') == 'on':
+#             print("Applying own_tasks filter, user:", self.request.user)
+#             queryset = queryset.filter(author=self.request.user)
+#             print("Filtered count:", queryset.count())
+#         return queryset
 
 #     def get_context_data(self, **kwargs):
 #         context = super().get_context_data(**kwargs)
-#         context['statuses'] = Task._meta.get_field('status').remote_field.model.objects.all()
+#         context['statuses'] = Status.objects.all()
 #         context['users'] = User.objects.all()
-#         context['labels'] = Task._meta.get_field('labels').remote_field.model.objects.all()
+#         context['labels'] = Label.objects.all()
 #         return context
 
 #     def get_filterset_kwargs(self, filterset_class):
 #         kwargs = super().get_filterset_kwargs(filterset_class)
 #         kwargs['request'] = self.request
+#         print("Request passed to filter:", self.request.user)
 #         return kwargs
 
 #     def get_filterset(self, filterset_class):
 #         filterset = super().get_filterset(filterset_class)
+#         print("Filterset created:", filterset)
 #         return filterset
 
 #     def test_func(self):
@@ -50,8 +47,8 @@
 #             'Необходима авторизация пользователя.'
 #         )
 #         return redirect('index')
-
-
+#
+#
 # class TaskCreateView(LoginRequiredMixin, CreateView):
 #     model = Task
 #     template_name = 'tasks/task_create.html'
@@ -200,11 +197,14 @@ class TaskListView(LoginRequiredMixin, FilterView):
     filterset_class = TaskFilter
 
     def get_queryset(self):
-        return Task.objects.all().select_related('status', 'author', 'assignee').prefetch_related('labels')
+        queryset = Task.objects.all().select_related('status', 'author', 'assignee').prefetch_related('labels')
+        if self.request.GET.get('own_tasks') == 'on':
+            queryset = queryset.filter(author=self.request.user)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = self.filterset  # Передаем фильтр в шаблон
+        context['filter'] = self.filterset
         context['statuses'] = Task._meta.get_field('status').remote_field.model.objects.all()
         context['users'] = User.objects.all()
         context['labels'] = Task._meta.get_field('labels').remote_field.model.objects.all()

@@ -7,9 +7,10 @@ from .views import (
     TaskDeleteView
 )
 
+
 urlpatterns = [
     path('', TaskListView.as_view(), name='task_list'),
-    path('<int:pk>/', TaskDetailView.as_view(), name='task_show'),
+    path('<int:pk>/', TaskDetailView.as_view(), name='task_detail'),
     path('create/', TaskCreateView.as_view(), name='task_create'),
     path(
         '<int:pk>/update/',
