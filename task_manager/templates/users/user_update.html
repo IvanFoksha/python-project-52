@@ -79,12 +79,12 @@
       {% endif %}
     </div>
     <div class="mb-3">
-      <label for="id_password_create" class="form-label">Пароль</label>
+      <label for="id_password1" class="form-label">Пароль</label>
       <input
         type="password"
         class="form-control bg-secondary text-light"
-        id="id_password_create"
-        name="password"
+        id="id_password1"
+        name="password1"
         value=""
       />
       <div class="form-check mt-2">
@@ -97,21 +97,19 @@
           >Показать пароль</label
         >
       </div>
-      {% if form.password.errors %}
+      {% if form.password1.errors %}
       <div class="alert alert-danger text-light bg-secondary mt-2">
-        {{ form.password.errors.0 }}
+        {{ form.password1.errors.0 }}
       </div>
       {% endif %}
     </div>
     <div class="mb-3">
-      <label for="id_password_confirm" class="form-label"
-        >Подтверждение пароля</label
-      >
+      <label for="id_password2" class="form-label">Подтверждение пароля</label>
       <input
         type="password"
         class="form-control bg-secondary text-light"
-        id="id_password_confirm"
-        name="password_confirm"
+        id="id_password2"
+        name="password2"
         value=""
       />
       <div class="form-check mt-2">
@@ -124,9 +122,9 @@
           >Показать пароль</label
         >
       </div>
-      {% if form.password_confirm.errors %}
+      {% if form.password2.errors %}
       <div class="alert alert-danger text-light bg-secondary mt-2">
-        {{ form.password_confirm.errors.0 }}
+        {{ form.password2.errors.0 }}
       </div>
       {% endif %} {% if form.non_field_errors %}
       <div class="alert alert-danger text-light bg-secondary mt-2">
@@ -141,8 +139,8 @@
   document.addEventListener("DOMContentLoaded", function () {
     const showPasswordCreate = document.getElementById("showPasswordCreate");
     const showPasswordConfirm = document.getElementById("showPasswordConfirm");
-    const passwordField = document.getElementById("id_password_create");
-    const passwordConfirmField = document.getElementById("id_password_confirm");
+    const passwordField = document.getElementById("id_password1");
+    const passwordConfirmField = document.getElementById("id_password2");
 
     if (showPasswordCreate && passwordField) {
       showPasswordCreate.addEventListener("click", function () {
