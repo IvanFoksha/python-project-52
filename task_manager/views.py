@@ -33,7 +33,7 @@ class CustomLoginView(View):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            messages.success(request, f'Вы успешно вошли как {user.username}!')
+            messages.success(request, 'Вы залогинены')
             return redirect('index')
         messages.error(request, 'Неверные данные или ошибка входа.')
         return render(request, 'index.html', {'form': form})
