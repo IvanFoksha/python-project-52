@@ -132,4 +132,4 @@ class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             request,
             f'Метка "{self.object.name}" успешно удалена!'
         )
-        return redirect(self.get_success_url())
+        return redirect(self.success_url)

@@ -2,12 +2,13 @@ import unittest
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from task_manager.models import Label, Task, Status
+from task_manager.labels.models import Label
+from task_manager.tasks.models import Task
+from task_manager.statuses.models import Status
 from django.contrib.messages import get_messages
 
 
-class LabelCRUDTests(TestCase):
-
+class LabelTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(
@@ -22,17 +23,12 @@ class LabelCRUDTests(TestCase):
             author=self.user
         )
         self.label = Label.objects.create(name='Тестовая метка')
-        self.task.labels.add(self.label)  # Связываем метку с задачей
+        self.task.labels.add(self.label)
         self.label_list_url = reverse('label_list')
         self.label_create_url = reverse('label_create')
-        self.label_update_url = reverse(
-            'label_update',
-            kwargs={'pk': self.label.pk}
-        )
-        self.label_delete_url = reverse(
-            'label_delete',
-            kwargs={'pk': self.label.pk}
-        )
+        self.label_update_url = reverse('label_update', kwargs={'pk': self.label.pk})
+        self.label_delete_url = reverse('label_delete', kwargs={'pk': self.label.pk})
+        self.index_url = reverse('index')
 
     def test_label_list_view(self):
         self.client.login(username='testuser', password='TestPass123')
@@ -44,7 +40,7 @@ class LabelCRUDTests(TestCase):
     def test_label_list_unauthorized(self):
         response = self.client.get(self.label_list_url)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('index'))
+        self.assertRedirects(response, self.index_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertIn('Необходима авторизация пользователя', str(messages[0]))
@@ -64,7 +60,7 @@ class LabelCRUDTests(TestCase):
         form_data = {'name': 'Новая метка'}
         response = self.client.post(self.label_create_url, form_data)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('index'))
+        self.assertRedirects(response, self.index_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertIn('Необходима авторизация пользователя', str(messages[0]))
@@ -85,7 +81,7 @@ class LabelCRUDTests(TestCase):
         form_data = {'name': 'Обновленная метка'}
         response = self.client.post(self.label_update_url, form_data)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('index'))
+        self.assertRedirects(response, self.index_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertIn('Необходима авторизация пользователя', str(messages[0]))
@@ -94,7 +90,7 @@ class LabelCRUDTests(TestCase):
         self.client.login(username='testuser', password='TestPass123')
         label = Label.objects.create(name='Удаляемая метка')
         delete_url = reverse('label_delete', kwargs={'pk': label.pk})
-        response = self.client.post(delete_url)
+        response = self.client.post(delete_url, {'confirm': True})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.label_list_url)
         self.assertFalse(Label.objects.filter(pk=label.pk).exists())
@@ -104,24 +100,22 @@ class LabelCRUDTests(TestCase):
 
     def test_label_delete_with_task(self):
         self.client.login(username='testuser', password='TestPass123')
-        response = self.client.post(self.label_delete_url)
+        response = self.client.post(self.label_delete_url, {'confirm': True})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.label_list_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn(
-            'Нельзя удалить метку, связанную с задачами.',
-            str(messages[0])
-        )
+        self.assertIn('Нельзя удалить метку, связанную с задачами', str(messages[0]))
         self.assertTrue(Label.objects.filter(pk=self.label.pk).exists())
 
     def test_label_delete_unauthorized(self):
-        response = self.client.post(self.label_delete_url)
+        response = self.client.post(self.label_delete_url, {'confirm': True})
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('index'))
+        self.assertRedirects(response, self.index_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertIn('Необходима авторизация пользователя', str(messages[0]))
+        self.assertTrue(Label.objects.filter(pk=self.label.pk).exists())
 
 
 if __name__ == '__main__':
