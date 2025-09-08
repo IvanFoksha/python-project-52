@@ -22,22 +22,6 @@
   <form method="post">
     {% csrf_token %}
     <div class="mb-3">
-      <label for="id_username" class="form-label">Имя пользователя</label>
-      <input
-        type="text"
-        class="form-control bg-secondary text-light"
-        id="id_username"
-        name="username"
-        value="{{ form.username.value|default_if_none:'' }}"
-        required
-      />
-      {% if form.username.errors %}
-      <div class="alert alert-danger text-light bg-secondary mt-2">
-        {{ form.username.errors.0 }}
-      </div>
-      {% endif %}
-    </div>
-    <div class="mb-3">
       <label for="id_first_name" class="form-label">Имя</label>
       <input
         type="text"
@@ -66,6 +50,22 @@
       {% if form.last_name.errors %}
       <div class="alert alert-danger text-light bg-secondary mt-2">
         {{ form.last_name.errors.0 }}
+      </div>
+      {% endif %}
+    </div>
+    <div class="mb-3">
+      <label for="id_username" class="form-label">Имя пользователя</label>
+      <input
+        type="text"
+        class="form-control bg-secondary text-light"
+        id="id_username"
+        name="username"
+        value="{{ form.username.value|default_if_none:'' }}"
+        required
+      />
+      {% if form.username.errors %}
+      <div class="alert alert-danger text-light bg-secondary mt-2">
+        {{ form.username.errors.0 }}
       </div>
       {% endif %}
     </div>
