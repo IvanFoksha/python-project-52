@@ -32,7 +32,7 @@ class UserListView(ListView):
 class UserCreateView(CreateView):
     model = User
     template_name = 'users/user_create.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('login')
     form_class = CustomUserCreationForm
 
     def form_valid(self, form):
