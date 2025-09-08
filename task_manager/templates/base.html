@@ -27,6 +27,9 @@
         height: 3px;
         border-radius: 1px;
       }
+      .form-control {
+        display: block;
+      }
     </style>
   </head>
   <body>
@@ -187,7 +190,7 @@
                 {% csrf_token %}
                 <div class="mb-3">
                   <label for="id_username" class="form-label"
-                    >Имя пользователя</label
+                    >Пользователь</label
                   >
                   <input
                     type="text"
