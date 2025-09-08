@@ -28,6 +28,7 @@
         class="form-control bg-secondary text-light"
         id="id_first_name"
         name="first_name"
+        placeholder="Имя"
         value="{{ form.first_name.value|default_if_none:'' }}"
         required
       />
@@ -44,6 +45,7 @@
         class="form-control bg-secondary text-light"
         id="id_last_name"
         name="last_name"
+        placeholder="Фамилия"
         value="{{ form.last_name.value|default_if_none:'' }}"
         required
       />
@@ -60,6 +62,7 @@
         class="form-control bg-secondary text-light"
         id="id_username"
         name="username"
+        placeholder="Имя пользователя"
         value="{{ form.username.value|default_if_none:'' }}"
         required
       />
@@ -76,6 +79,7 @@
         class="form-control bg-secondary text-light"
         id="id_password1"
         name="password1"
+        placeholder="Пароль"
         value="{{ form.password1.value|default_if_none:'' }}"
         required
       />
@@ -102,6 +106,7 @@
         class="form-control bg-secondary text-light"
         id="id_password2"
         name="password2"
+        placeholder="Подтверждение пароля"
         value="{{ form.password2.value|default_if_none:'' }}"
         required
       />
