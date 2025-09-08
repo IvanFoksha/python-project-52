@@ -41,7 +41,6 @@ class UserCreateView(CreateView):
             self.request,
             f'Пользователь {user.username} успешно создан!'
         )
-        login(self.request, user)
         return redirect(self.success_url)
 
     def form_invalid(self, form):
