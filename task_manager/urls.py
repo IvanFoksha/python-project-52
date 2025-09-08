@@ -4,7 +4,8 @@ from task_manager.views import (
     index,
     about,
     TestErrorView,
-    CustomLoginView
+    CustomLoginView,
+    CustomLogoutView,
 )
 from django.contrib import admin
 
@@ -14,13 +15,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('task_manager.users.urls')),
     path('login/', CustomLoginView.as_view(), name='login'),
-    path(
-        'logout/',
-        auth_views.LogoutView.as_view(
-            next_page='index',
-            template_name='logout.html'
-        ),
-        name='logout'),
+    path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('statuses/', include('task_manager.statuses.urls')),
     path('tasks/', include('task_manager.tasks.urls')),
     path('labels/', include('task_manager.labels.urls')),
