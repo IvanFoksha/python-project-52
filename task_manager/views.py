@@ -2,7 +2,7 @@ import rollbar
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseServerError
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.views import View
 from django.contrib import messages
 
@@ -42,3 +42,10 @@ class CustomLoginView(View):
             return redirect('index')
         messages.error(request, 'Неверные данные или ошибка входа.')
         return render(request, 'index.html', {'form': form})
+
+
+class CustomLogoutView(View):
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        messages.success(request, 'Вы разлогинены')
+        return redirect('index')
