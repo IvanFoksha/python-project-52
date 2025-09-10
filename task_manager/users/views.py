@@ -74,7 +74,7 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         user = form.save()
         update_session_auth_hash(self.request, user)
-        messages.success(self.request, 'Профиль успешно обновлен!')
+        messages.success(self.request, 'Пользователь успешно изменен')
         return super().form_valid(form)
 
     def form_invalid(self, form):
