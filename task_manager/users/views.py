@@ -40,7 +40,7 @@ class UserCreateView(CreateView):
         login(self.request, user)
         messages.success(
             self.request,
-            f'Пользователь {user.username} успешно создан!'
+            'Пользователь успешно зарегистрирован'
         )
         return redirect(self.success_url)
 
