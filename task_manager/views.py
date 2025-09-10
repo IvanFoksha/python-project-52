@@ -28,10 +28,9 @@ def handler500(request):
 
 
 class CustomLoginView(View):
-
     def get(self, request, *args, **kwargs):
         form = AuthenticationForm()
-        return render(request, 'index.html', {'form': form})
+        return render(request, 'login.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
         form = AuthenticationForm(data=request.POST)
@@ -41,7 +40,7 @@ class CustomLoginView(View):
             messages.success(request, 'Вы залогинены')
             return redirect('index')
         messages.error(request, 'Неверные данные или ошибка входа.')
-        return render(request, 'index.html', {'form': form})
+        return render(request, 'login.html', {'form': form})
 
 
 class CustomLogoutView(View):
