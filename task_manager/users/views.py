@@ -104,6 +104,5 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect('user_list')
 
     def form_valid(self, form):
-        user = self.get_object()
-        messages.success(self.request, f'Пользователь {user.username} успешно удален!')
-        return super().form_valid(form)
+        messages.success(self.request, 'Пользователь успешно удален')
+        return redirect(self.success_url)
