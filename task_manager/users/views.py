@@ -1,3 +1,4 @@
+from venv import logger
 from django.shortcuts import redirect
 from django.views.generic import (
     ListView,
@@ -105,8 +106,14 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect('user_list')
 
     def form_valid(self, form):
-        delete_user = self.get_object()
-        logout(self.request)
-        delete_user = delete_user.delete()
+        logger.debug("Starting form_valid for user: %s", self.get_object().username)
         messages.success(self.request, 'Пользователь успешно удалён')
-        return super().form_valid(form)
+        # Временно закомментируем logout для теста
+        # logout(self.request)
+        logger.debug("Calling super().form_valid")
+        response = super().form_valid(form)
+        logger.debug("super().form_valid returned: %s", response)
+        return response
+        # delete_user = form.delete()
+        # messages.success(self.request, 'Пользователь успешно удалён')
+        # return super().form_valid(form)
