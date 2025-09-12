@@ -12,6 +12,7 @@ from django.contrib.auth import (
     login,
     authenticate,
     update_session_auth_hash,
+    logout
 )
 from django.contrib import messages
 from task_manager.users.forms import CustomUserCreationForm, UserChangeForm
@@ -104,7 +105,7 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect('user_list')
 
     def form_valid(self, form):
-        # logout(self.request)
+        logout(self.request)
         success = super().form_valid(form)
         messages.success(self.request, 'Пользователь успешно удалён')
         return redirect(self.success_url)
