@@ -93,25 +93,19 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('user_list')
 
     def test_func(self):
-        return (
-            self.request.user.is_authenticated
-            and self.request.user == self.get_object()
-        )
+        return self.request.user.is_authenticated and self.request.user == self.get_object()
 
     def handle_no_permission(self):
-        messages.error(
-            self.request,
-            'У вас нет прав для удаления этого профиля.'
-        )
+        messages.error(self.request, 'У вас нет прав для удаления этого профиля.')
         return redirect('user_list')
 
-    def form_valid(self, form):
-        user = self.get_object()
-        self.object.delete()
-        if self.request.user == user:
-            logout(self.request)
-        messages.success(self.request, 'Пользователь успешно удален')
-        return super().form_valid(form)
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Выполняем удаление
+        if request.user == self.object:
+            logout(request)  # Логаут, если удаляем текущего пользователя
+        messages.success(request, 'Пользователь успешно удален')
+        return redirect(self.success_url)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
