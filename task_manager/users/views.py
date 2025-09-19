@@ -99,16 +99,19 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         )
 
     def handle_no_permission(self):
-        messages.error(self.request, 'У вас нет прав для удаления этого профиля.')
+        messages.error(
+            self.request,
+            'У вас нет прав для удаления этого профиля.'
+        )
         return redirect('user_list')
 
     def form_valid(self, form):
-        response = super().form_valid(form)
         user = self.get_object()
+        self.object.delete()
         if self.request.user == user:
             logout(self.request)
         messages.success(self.request, 'Пользователь успешно удален')
-        return response
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
