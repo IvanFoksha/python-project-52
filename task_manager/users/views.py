@@ -106,14 +106,11 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect('user_list')
 
     def form_valid(self, form):
-        logger.debug("Starting form_valid for user: %s", self.get_object().username)
+        form.delete()
         messages.success(self.request, 'Пользователь успешно удалён')
-        # Временно закомментируем logout для теста
-        # logout(self.request)
-        logger.debug("Calling super().form_valid")
-        response = super().form_valid(form)
-        logger.debug("super().form_valid returned: %s", response)
-        return response
-        # delete_user = form.delete()
-        # messages.success(self.request, 'Пользователь успешно удалён')
-        # return super().form_valid(form)
+        return redirect(self.success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.get_object()
+        return context
