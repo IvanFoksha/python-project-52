@@ -45,7 +45,7 @@ services:
 
   app:
     build: .
-    command: bash -c "python manage.py migrate && uv run pytest -vv tests"
+    command: python manage.py migrate --verbosity 3 && uv run pytest -vv tests
     volumes:
       - .:/project
     depends_on:

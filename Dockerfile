@@ -16,7 +16,7 @@ RUN uv venv .venv && \
 COPY . .
 
 # Activate venv in entrypoint
-ENTRYPOINT ["/bin/bash", "-c", "source .venv/bin/activate && exec \"$@\"", "--"]
+ENTRYPOINT ["/bin/bash", "-c", ". .venv/bin/activate && exec \"$@\"", "--"]
 
 # Expose port
 EXPOSE 3000
