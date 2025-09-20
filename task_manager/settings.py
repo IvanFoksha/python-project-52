@@ -75,25 +75,25 @@ TEMPLATES = [
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
 DATABASE_URL = os.getenv('DATABASE_URL')
-if DATABASE_URL:
+if 'RENDER' in os.environ:  # Для prod на Render
     DATABASES = {
         'default': dj_database_url.config(
-            default=DATABASE_URL,
+            default=os.getenv('DATABASE_URL'),
             conn_max_age=600,
             conn_health_checks=True,
         )
     }
-else:
+else:  # Для local dev с Docker PG
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('POSTGRES_DB', 'mydb'),
-            'USER': os.getenv('POSTGRES_USER', 'myuser'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'mypassword'),
-            'HOST': os.getenv('POSTGRES_HOST', 'db'),
-            'PORT': os.getenv('POSTGRES_PORT', '5432'),
-        }
-    }
+            'NAME': 'mydb',
+            'USER': 'myuser',
+            'PASSWORD': 'mypassword',
+            'HOST': 'localhost',
+            'PORT': '5432',
+          }
+      }
 
 # PostgreSQL для Render, SQLite для локальной разработки
 # DATABASE_URL = os.getenv('DATABASE_URL')
