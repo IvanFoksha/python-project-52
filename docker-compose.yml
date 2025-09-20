@@ -12,6 +12,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   server:
     build: .
@@ -44,9 +49,12 @@ services:
     volumes:
       - .:/project
     depends_on:
-      - db
-      - server
-      - webserver
+      db:
+        condition: service_healthy
+      server:
+        condition: service_started
+      webserver:
+        condition: service_started
     environment:
       - DJANGO_SETTINGS_MODULE=task_manager.settings
       - POSTGRES_DB=mydb

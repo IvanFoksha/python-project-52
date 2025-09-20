@@ -2,19 +2,24 @@ FROM python:3.13-slim
 
 WORKDIR /project
 
-# Install uv for dependency management
+# Install uv
 RUN pip install uv
 
-# Copy project files
+# Copy pyproject.toml, uv.lock, and README.md first for caching and metadata
+COPY pyproject.toml uv.lock README.md ./
+
+# Create venv and install deps
+RUN uv venv .venv && \
+    uv sync --frozen
+
+# Copy rest of code
 COPY . .
 
-# Install dependencies
-RUN uv venv .venv && \
-    . .venv/bin/activate && \
-    uv sync
+# Activate venv in entrypoint
+ENTRYPOINT ["/bin/sh", "-c", ". source .venv/bin/activate && exec \"$@\"", "--"]
 
-# Expose ports if needed (optional, since docker-compose handles it)
+# Expose port
 EXPOSE 3000
 
-# Default command (overridden in docker-compose)
+# Default command
 CMD ["python", "manage.py", "runserver", "0.0.0.0:3000"]
