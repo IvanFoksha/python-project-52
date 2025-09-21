@@ -14,4 +14,5 @@ services:
     region: frankfurt
     buildCommand: make build
     startCommand: make render-start
+    postDeployCommand: python manage.py migrate
     autoDeployTrigger: commit
