@@ -78,12 +78,12 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 # PostgreSQL для Render, SQLite для локальной разработки
 if 'RENDER' in os.environ:
     DATABASES = {
-        'default': (
-            dj_database_url.config(
-                default=os.getenv('DATABASE_URL'),
-                conn_max_age=600,
-                conn_health_checks=True,
-            )
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+            engine='django.db.backends.postgresql_psycopg2',
+            options={'sslmode': 'require'},
         )
     }
 else:
