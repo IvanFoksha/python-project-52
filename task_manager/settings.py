@@ -21,26 +21,26 @@ ALLOWED_HOSTS = [
     'webserver',
     'localhost',
     '127.0.0.1',
-    os.getenv(
-        'RENDER_EXTERNAL_HOSTNAME',
-        'https://task-manager-2c1d.onrender.com'
-    )
+    # os.getenv(
+    #     'RENDER_EXTERNAL_HOSTNAME',
+    'https://task-manager-2c1d.onrender.com'
+    # )
 ]
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
+    'task_manager.users.apps.UsersConfig',
     'django.contrib.contenttypes',
+    'django.contrib.auth',
+    'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_bootstrap5',
-    'django_filters',
     'task_manager',
-    'task_manager.users.apps.UsersConfig',
     'task_manager.statuses.apps.StatusesConfig',
     'task_manager.tasks.apps.TasksConfig',
     'task_manager.labels.apps.LabelsConfig',
+    'django_bootstrap5',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
