@@ -1,0 +1,17 @@
+# Exported from Render on 2025-09-21T11:08:33Z
+version: "1"
+services:
+  - type: web
+    name: task-manager
+    runtime: python
+    repo: https://github.com/IvanFoksha/python-project-52
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DJANGO_SECRET_KEY
+        sync: false
+    region: frankfurt
+    buildCommand: make build
+    startCommand: make render-start
+    autoDeployTrigger: commit
