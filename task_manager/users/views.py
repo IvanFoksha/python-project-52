@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from task_manager.users.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import (
+    get_user_model,
     login,
     update_session_auth_hash,
     logout
@@ -18,7 +19,7 @@ from task_manager.users.forms import CustomUserCreationForm, UserChangeForm
 
 
 class UserListView(ListView):
-    model = User
+    model = get_user_model()
     template_name = 'users/user_list.html'
     context_object_name = 'users'
 
@@ -30,7 +31,7 @@ class UserListView(ListView):
 
 
 class UserCreateView(CreateView):
-    model = User
+    model = get_user_model()
     template_name = 'users/user_create.html'
     success_url = reverse_lazy('login')
     form_class = CustomUserCreationForm
@@ -53,7 +54,7 @@ class UserCreateView(CreateView):
 
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = User
+    model = get_user_model()
     form_class = UserChangeForm
     template_name = 'users/user_update.html'
     success_url = reverse_lazy('user_list')
@@ -89,7 +90,7 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = User
+    model = get_user_model()
     template_name = 'users/user_delete.html'
     success_url = reverse_lazy('user_list')
 
