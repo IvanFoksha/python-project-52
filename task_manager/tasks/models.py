@@ -11,8 +11,8 @@ class Task(models.Model):
         help_text='Статус задачи'
     )
     author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
+        to=User,
+        on_delete=models.PROTECT,
         related_name='authored_tasks',
         help_text='Автор задачи'
     )
