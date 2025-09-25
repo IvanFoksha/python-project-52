@@ -1,4 +1,3 @@
-from venv import logger
 from django.shortcuts import redirect
 from django.views.generic import (
     ListView,
@@ -7,11 +6,10 @@ from django.views.generic import (
     DeleteView,
 )
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
+from task_manager.users.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth import (
     login,
-    authenticate,
     update_session_auth_hash,
     logout
 )
@@ -76,13 +74,16 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         user = form.save()
         update_session_auth_hash(self.request, user)
-        messages.success(self.request, 'Пользователь успешно изменен')
+        messages.success(
+            self.request,
+            'Пользователь успешно изменен'
+        )
         return super().form_valid(form)
 
     def form_invalid(self, form):
         messages.error(
             self.request,
-            'Исправьте ошибки в форме.'
+            'Ошибка обновления пользователя. Проверьте данные.'
         )
         return super().form_invalid(form)
 

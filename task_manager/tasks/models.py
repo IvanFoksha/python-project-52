@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 
 class Task(models.Model):
@@ -11,13 +11,13 @@ class Task(models.Model):
         help_text='Статус задачи'
     )
     author = models.ForeignKey(
-        to=User,
+        to=settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         related_name='authored_tasks',
         help_text='Автор задачи'
     )
     assignee = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

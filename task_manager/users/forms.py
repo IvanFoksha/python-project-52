@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from task_manager.users.models import User
 # from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
@@ -39,9 +39,8 @@ class CustomUserCreationForm(forms.ModelForm):
             c.isdigit() for c in password1
         ):
             raise ValidationError(
-                '''Пароль должен содержать минимум 8 символов,
-                включая заглавную букву и цифру.
-                '''
+                'Пароль должен содержать минимум 8 символов, '
+                'включая заглавную букву и цифру.'
             )
         return cleaned_data
 

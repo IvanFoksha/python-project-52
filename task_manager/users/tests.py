@@ -1,7 +1,7 @@
 import unittest
 from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth.models import User
+from task_manager.users.models import User
 from django.contrib.messages import get_messages
 
 
@@ -78,7 +78,7 @@ class UserTests(TestCase):
         self.assertRedirects(response, self.list_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('успешно обновлен', str(messages[0]))
+        self.assertEqual(str(messages[0]), 'Пользователь успешно изменен')
 
     def test_update_user_no_password_change(self):
         self.client.login(username='testuser', password='TestPass123')
@@ -138,7 +138,7 @@ class UserTests(TestCase):
         self.assertRedirects(response, self.list_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('успешно удален', str(messages[0]))
+        self.assertEqual(str(messages[0]), 'Пользователь успешно удалён')
 
     def test_delete_user_unauthorized(self):
         another_user = User.objects.create_user(
