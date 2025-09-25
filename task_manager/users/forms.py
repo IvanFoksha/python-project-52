@@ -4,6 +4,11 @@ from task_manager.users.models import User
 from django.core.exceptions import ValidationError
 
 
+def get_user_model_lazy():
+    from django.contrib.auth import get_user_model
+    return get_user_model()
+
+
 class CustomUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(
         widget=forms.PasswordInput,

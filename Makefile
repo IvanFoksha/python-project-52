@@ -27,5 +27,3 @@ test-labels:
 
 test-tasks:
 	python manage.py test task_manager.tasks.tests
-
-# test-all: test-users test-statuses test-tasks test-labels
