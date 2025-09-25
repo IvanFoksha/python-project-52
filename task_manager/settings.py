@@ -74,53 +74,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-if DATABASE_URL:
+# PostgreSQL для Render, SQLite для локальной разработки
+if 'RENDER' in os.environ:
+    database_url = os.getenv('DATABASE_URL')
+    if database_url and '?sslmode=require' not in database_url:
+        database_url += '?sslmode=require'
     DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=not DEBUG)
+        'default': dj_database_url.config(
+            default=database_url,
+            conn_max_age=600,
+            conn_health_checks=True,
+            engine='django.db.backends.postgresql',
+        )
     }
-
 else:
     DATABASES = {
-        "default": {
+        'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
-# Работающий вариант
-# DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
-
-# if DATABASE_URL.startswith("sqlite"):
-#     DATABASES = {
-#         "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-#     }
-# else:
-#     DATABASES = {
-#         "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=not DEBUG)
-#     }
-
-# DATABASE_URL = os.getenv('DATABASE_URL')
-# # PostgreSQL для Render, SQLite для локальной разработки
-# if 'RENDER' in os.environ:
-#     database_url = os.getenv('DATABASE_URL')
-#     if database_url and '?sslmode=require' not in database_url:
-#         database_url += '?sslmode=require'
-#     DATABASES = {
-#         'default': dj_database_url.config(
-#             default=database_url,
-#             conn_max_age=600,
-#             conn_health_checks=True,
-#             engine='django.db.backends.postgresql',
-#         )
-#     }
-# else:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
 
 # SQLite для локальной разработки
 

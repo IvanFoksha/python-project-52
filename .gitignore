@@ -9,6 +9,6 @@ venv/
 *.sqlite3
 staticfiles/
 .python-version
-migrations/
+# migrations/
 activate/
 *.egg-info/
