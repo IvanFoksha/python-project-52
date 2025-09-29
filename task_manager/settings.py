@@ -74,37 +74,53 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
-# PostgreSQL from env vars if available, else RENDER or SQLite
-if os.getenv('POSTGRES_HOST'):
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('POSTGRES_DB'),
-            'USER': os.getenv('POSTGRES_USER'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'HOST': os.getenv('POSTGRES_HOST'),
-            'PORT': os.getenv('POSTGRES_PORT'),
-        }
+        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=not DEBUG)
     }
-elif 'RENDER' in os.environ:
-    database_url = os.getenv('DATABASE_URL')
-    if database_url and '?sslmode=require' not in database_url:
-        database_url += '?sslmode=require'
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=database_url,
-            conn_max_age=600,
-            conn_health_checks=True,
-            engine='django.db.backends.postgresql',
-        )
-    }
+
 else:
     DATABASES = {
-        'default': {
+        "default": {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+# Работающий вариант
+# DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
+
+# if DATABASE_URL.startswith("sqlite"):
+#     DATABASES = {
+#         "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+#     }
+# else:
+#     DATABASES = {
+#         "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=not DEBUG)
+#     }
+
+# DATABASE_URL = os.getenv('DATABASE_URL')
+# # PostgreSQL для Render, SQLite для локальной разработки
+# if 'RENDER' in os.environ:
+#     database_url = os.getenv('DATABASE_URL')
+#     if database_url and '?sslmode=require' not in database_url:
+#         database_url += '?sslmode=require'
+#     DATABASES = {
+#         'default': dj_database_url.config(
+#             default=database_url,
+#             conn_max_age=600,
+#             conn_health_checks=True,
+#             engine='django.db.backends.postgresql',
+#         )
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
 
 # SQLite для локальной разработки
 
@@ -147,7 +163,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
