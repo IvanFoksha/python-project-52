@@ -75,21 +75,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'task_manager.wsgi.application'
 
 # PostgreSQL from env vars if available, else RENDER or SQLite
-database_url = os.getenv('DATABASE_URL')
-postgres_host = os.getenv('POSTGRES_HOST')
-
-if postgres_host:
+if os.getenv('POSTGRES_HOST'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.getenv('POSTGRES_DB'),
             'USER': os.getenv('POSTGRES_USER'),
             'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'HOST': postgres_host,
+            'HOST': os.getenv('POSTGRES_HOST'),
             'PORT': os.getenv('POSTGRES_PORT'),
         }
     }
 elif 'RENDER' in os.environ:
+    database_url = os.getenv('DATABASE_URL')
     if database_url and '?sslmode=require' not in database_url:
         database_url += '?sslmode=require'
     DATABASES = {
