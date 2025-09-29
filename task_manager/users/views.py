@@ -105,6 +105,7 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         self.object = self.get_object()
         self.object.delete()
         messages.success(request, 'Пользователь успешно удалён')
+        print("Пользователь успешно удалён - сообщение отображено")
         return redirect(self.success_url)
 
     def get_context_data(self, **kwargs):
