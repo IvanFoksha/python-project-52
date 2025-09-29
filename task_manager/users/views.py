@@ -16,7 +16,6 @@ from django.contrib.auth import (
 )
 from django.contrib import messages
 from task_manager.users.forms import CustomUserCreationForm, UserChangeForm
-import time
 
 
 class UserListView(ListView):
@@ -106,7 +105,6 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         self.object = self.get_object()
         self.object.delete()
         messages.success(request, 'Пользователь успешно удалён')
-        time.sleep(1)
         return redirect(self.success_url)
 
     def get_context_data(self, **kwargs):
