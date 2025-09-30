@@ -93,7 +93,8 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         ).remote_field.model.objects.all()
         context['users'] = User.objects.all()
         context['labels'] = Task._meta.get_field(
-            'labels').remote_field.model.objects.all()
+            'labels'
+        ).remote_field.model.objects.all()
         return context
 
 
@@ -144,10 +145,12 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['statuses'] = Task._meta.get_field(
-            'status').remote_field.model.objects.all()
+            'status'
+        ).remote_field.model.objects.all()
         context['users'] = User.objects.all()
         context['labels'] = Task._meta.get_field(
-            'labels').remote_field.model.objects.all()
+            'labels'
+        ).remote_field.model.objects.all()
         return context
 
 
