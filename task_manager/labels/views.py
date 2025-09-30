@@ -42,10 +42,10 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.created_at = timezone.now()
-        label = form.save()
+        # label = form.save()
         messages.success(
             self.request,
-            f'Метка "{label.name}" успешно создана!'
+            'Метка успешно создана'
         )
         return super().form_valid(form)
 
@@ -77,10 +77,10 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('label_list')
 
     def form_valid(self, form):
-        label = form.save()
+        # label = form.save()
         messages.success(
             self.request,
-            f'Метка "{label.name}" успешно обновлена!'
+            'Метка успешно изменена'
         )
         return super().form_valid(form)
 
@@ -130,6 +130,6 @@ class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         self.object.delete()
         messages.success(
             request,
-            f'Метка "{self.object.name}" успешно удалена!'
+            'Метка успешно удалена'
         )
         return redirect(self.success_url)
