@@ -118,7 +118,7 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.method == 'POST':
             messages.error(
                 self.request,
-                'Нельзя удалить статус, связанный с задачами.'
+                'Невозможно удалить статус, связанный с задачами.'
             )
             return redirect(self.success_url)
         return super().get(self.request)
@@ -128,7 +128,7 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if not self.test_func():
             messages.error(
                 request,
-                'Нельзя удалить статус, связанный с задачами.'
+                'Невозможно удалить статус, связанный с задачами.'
             )
             return redirect(self.success_url)
         self.object.delete()
