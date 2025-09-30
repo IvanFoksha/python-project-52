@@ -35,7 +35,7 @@
       <select class="form-select bg-secondary text-light" id="id_assignee" name="assignee">
         <option value="">Не назначен</option>
         {% for user in users %}
-          <option value="{{ user.pk }}" {% if form.assignee.value == user.pk %}selected{% endif %}>{{ user.username }}</option>
+          <option value="{{ user.pk }}" {% if form.assignee.value == user.pk %}selected{% endif %}>{{ user.get_full_name }}</option>
         {% endfor %}
       </select>
       {% if form.assignee.errors %}
