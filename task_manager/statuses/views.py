@@ -113,14 +113,11 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
                 'Необходима авторизация пользователя.'
             )
             return redirect('index')
-        else:
-            messages.error(
-                self.request,
-                'Нельзя удалить статус, связанный с задачами.'
-            )
-            self.object = self.get_object()
-            context = self.get_context_data(object=self.object)
-            return self.render_to_response(context)
+        messages.error(
+            self.request,
+            'Нельзя удалить статус, связанный с задачами.'
+        )
+        return redirect(self.success_url)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -129,7 +126,7 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
                 request,
                 'Нельзя удалить статус, связанный с задачами.'
             )
-            return redirect('status_delete')
+            return redirect(self.success_url)
         self.object.delete()
         messages.success(
             request,
