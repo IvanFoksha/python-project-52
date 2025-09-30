@@ -40,10 +40,10 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
     fields = ['name']
 
     def form_valid(self, form):
-        status = form.save()
+        # status = form.save()
         messages.success(
             self.request,
-            f'Статус "{status.name}" успешно создан!'
+            f'Статус успешно создан'
         )
         return super().form_valid(form)
 
@@ -72,10 +72,10 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
     fields = ['name']
 
     def form_valid(self, form):
-        status = form.save()
+        # status = form.save()
         messages.success(
             self.request,
-            f'Статус "{status.name}" успешно обновлен!'
+            f'Статус успешно обновлен'
         )
         return super().form_valid(form)
 
@@ -131,6 +131,6 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         self.object.delete()
         messages.success(
             request,
-            f'Статус "{self.object.name}" успешно удален!'
+            'Статус успешно удален'
         )
         return redirect(self.success_url)
