@@ -125,7 +125,7 @@ class UserTests(TestCase):
         }
         response = self.client.post(self.update_url, form_data)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, f'/users/')
+        self.assertRedirects(response, '/users/')
         self.user.refresh_from_db()
         self.assertEqual(self.user.username, 'testuser')
         self.assertTrue(self.user.check_password('TestPass123'))
@@ -160,7 +160,7 @@ class UserTests(TestCase):
     def test_delete_user_unauthenticated(self):
         response = self.client.post(self.delete_url)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, f'/users/')
+        self.assertRedirects(response, '/users/')
         self.assertTrue(User.objects.filter(pk=self.user.pk).exists())
 
 
