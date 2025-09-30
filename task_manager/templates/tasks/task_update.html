@@ -32,14 +32,14 @@
     </div>
     <div class="mb-3">
       <label for="id_executor" class="form-label text-light">Исполнитель</label>
-      <select class="form-select bg-secondary text-light" id="id_executor" name="executor">
+      <select class="form-select bg-secondary text-light" id="id_executor" name="assignee">
         <option value="">Не назначен</option>
         {% for user in users %}
-          <option value="{{ user.pk }}" {% if form.executor.value == user.pk %}selected{% endif %}>{{ user.get_full_name }}</option>
+          <option value="{{ user.pk }}" {% if form.assignee.value == user.pk %}selected{% endif %}>{{ user.get_full_name }}</option>
         {% endfor %}
       </select>
-      {% if form.executor.errors %}
-        <div class="alert alert-danger text-light bg-secondary mt-2">{{ form.executor.errors.0 }}</div>
+      {% if form.assignee.errors %}
+        <div class="alert alert-danger text-light bg-secondary mt-2">{{ form.assignee.errors.0 }}</div>
       {% endif %}
     </div>
     <div class="mb-3">
