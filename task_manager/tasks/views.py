@@ -148,8 +148,10 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('task_list')
 
     def test_func(self):
-        task = self.get_object()
-        return self.request.user == task.author
+        if self.request.method == 'POST':
+            task = self.get_object()
+            return self.request.user == task.author
+        return True
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
@@ -158,18 +160,25 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
                 'Необходима авторизация пользователя.'
             )
             return redirect('index')
-        else:
+        if self.request.method == 'POST':
             messages.error(
                 self.request,
                 'Удаление задачи может выполнить только автор.'
             )
-            return redirect('task_list')
+            return redirect(self.success_url)
+        return super().get(self.request)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if not self.test_func():
+            messages.error(
+                request,
+                'Удаление задачи может выполнить только автор.'
+            )
+            return redirect(self.success_url)
         self.object.delete()
         messages.success(
             request,
             'Задача успешно удалена'
         )
-        return redirect(self.get_success_url())
+        return redirect(self.success_url)
