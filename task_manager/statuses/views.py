@@ -43,7 +43,7 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
         # status = form.save()
         messages.success(
             self.request,
-            f'Статус успешно создан'
+            'Статус успешно создан'
         )
         return super().form_valid(form)
 
@@ -75,7 +75,7 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
         # status = form.save()
         messages.success(
             self.request,
-            f'Статус успешно обновлен'
+            'Статус успешно изменен'
         )
         return super().form_valid(form)
 
