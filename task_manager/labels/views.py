@@ -108,8 +108,10 @@ class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('label_list')
 
     def test_func(self):
-        label = self.get_object()
-        return not label.has_related_tasks()
+        if self.request.method == 'POST':
+            label = self.get_object()
+            return not label.has_related_tasks()
+        return True
 
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
@@ -118,15 +120,22 @@ class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
                 'Необходима авторизация пользователя.'
             )
             return redirect('index')
-        else:
+        if self.request.method == 'POST':
             messages.error(
                 self.request,
-                'Нельзя удалить метку, связанную с задачами.'
+                'Невозможно удалить метку, связанную с задачами.'
             )
-            return redirect('label_list')
+            return redirect(self.success_url)
+        return super().get(self.request)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if not self.test_func():
+            messages.error(
+                request,
+                'Невозможно удалить метку, связанную с задачами.'
+            )
+            return redirect(self.success_url)
         self.object.delete()
         messages.success(
             request,
