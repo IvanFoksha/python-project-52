@@ -83,13 +83,11 @@
             class="btn btn-warning btn-sm"
             >Изменить</a
           >
-          {% if request.user == task.author %}
           <a
             href="{% url 'task_delete' pk=task.pk %}"
             class="btn btn-danger btn-sm"
             >Удалить</a
           >
-          {% endif %}
         </td>
       </tr>
       {% endfor %}
