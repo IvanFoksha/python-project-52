@@ -114,7 +114,7 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.delete(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
-        return self.form_valid(request, *args, **kwargs)
+        return self.form_valid(None)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
