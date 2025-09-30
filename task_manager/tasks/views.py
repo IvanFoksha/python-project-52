@@ -21,7 +21,9 @@ class TaskListView(LoginRequiredMixin, FilterView):
     filterset_class = TaskFilter
 
     def get_queryset(self):
-        queryset = Task.objects.all().select_related('status', 'author', 'assignee').prefetch_related('labels')
+        queryset = Task.objects.all().select_related(
+            'status', 'author', 'assignee'
+        ).prefetch_related('labels')
         if self.request.GET.get('own_tasks') == 'on':
             queryset = queryset.filter(author=self.request.user)
         return queryset
@@ -29,9 +31,11 @@ class TaskListView(LoginRequiredMixin, FilterView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filter'] = self.filterset
-        context['statuses'] = Task._meta.get_field('status').remote_field.model.objects.all()
+        context['statuses'] = Task._meta.get_field(
+            'status').remote_field.model.objects.all()
         context['users'] = User.objects.all()
-        context['labels'] = Task._meta.get_field('labels').remote_field.model.objects.all()
+        context['labels'] = Task._meta.get_field(
+            'labels').remote_field.model.objects.all()
         return context
 
     def get_filterset_kwargs(self, filterset_class):
@@ -61,7 +65,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         # task = form.save()
         messages.success(
             self.request,
-            'Задача успешно создана'
+            f'Задача "{form.instance.name}" успешно создана!'
         )
         return super().form_valid(form)
 
@@ -84,9 +88,11 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['statuses'] = Task._meta.get_field('status').remote_field.model.objects.all()
+        context['statuses'] = Task._meta.get_field(
+            'status').remote_field.model.objects.all()
         context['users'] = User.objects.all()
-        context['labels'] = Task._meta.get_field('labels').remote_field.model.objects.all()
+        context['labels'] = Task._meta.get_field(
+            'labels').remote_field.model.objects.all()
         return context
 
 
@@ -136,9 +142,11 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['statuses'] = Task._meta.get_field('status').remote_field.model.objects.all()
+        context['statuses'] = Task._meta.get_field(
+            'status').remote_field.model.objects.all()
         context['users'] = User.objects.all()
-        context['labels'] = Task._meta.get_field('labels').remote_field.model.objects.all()
+        context['labels'] = Task._meta.get_field(
+            'labels').remote_field.model.objects.all()
         return context
 
 
