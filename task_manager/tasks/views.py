@@ -130,7 +130,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     def handle_no_permission(self):
         messages.error(
             self.request,
-            'Необходима авторизация пользователя.'
+            'У вас нет прав для изменения'
         )
         return redirect('index')
 
