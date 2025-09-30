@@ -62,10 +62,9 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        # task = form.save()
         messages.success(
             self.request,
-            f'Задача "{form.instance.name}" успешно создана!'
+            'Задача успешно создана'
         )
         return super().form_valid(form)
 
@@ -118,7 +117,6 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('task_list')
 
     def form_valid(self, form):
-        # task = form.save()
         messages.success(
             self.request,
             'Задача успешно изменена'
