@@ -18,7 +18,7 @@
         <select name="assignee" class="form-select bg-secondary text-light" id="id_assignee" style="min-width: 200px;">
           <option value="">Не назначен</option>
           {% for user in users %}
-            <option value="{{ user.pk }}" {% if request.GET.assignee == user.pk|stringformat:"s" %}selected{% endif %}>{{ user.username }}</option>
+            <option value="{{ user.pk }}" {% if request.GET.assignee == user.pk|stringformat:"s" %}selected{% endif %}>{{ user.get_full_name }}</option>
           {% endfor %}
         </select>
       </div>
