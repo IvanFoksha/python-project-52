@@ -129,7 +129,7 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
                 request,
                 'Нельзя удалить статус, связанный с задачами.'
             )
-            return redirect(self.success_url)
+            return redirect('status_delete')
         self.object.delete()
         messages.success(
             request,
