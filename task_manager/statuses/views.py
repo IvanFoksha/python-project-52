@@ -118,7 +118,8 @@ class StatusDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
                 self.request,
                 'Нельзя удалить статус, связанный с задачами.'
             )
-            return redirect(self.success_url)
+            context = self.get_context_data(object=self.get_object())
+            return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
