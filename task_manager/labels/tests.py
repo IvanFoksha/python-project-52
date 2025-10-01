@@ -26,8 +26,14 @@ class LabelTests(TestCase):
         self.task.labels.add(self.label)
         self.label_list_url = reverse('label_list')
         self.label_create_url = reverse('label_create')
-        self.label_update_url = reverse('label_update', kwargs={'pk': self.label.pk})
-        self.label_delete_url = reverse('label_delete', kwargs={'pk': self.label.pk})
+        self.label_update_url = reverse(
+            'label_update',
+            kwargs={'pk': self.label.pk}
+        )
+        self.label_delete_url = reverse(
+            'label_delete',
+            kwargs={'pk': self.label.pk}
+        )
         self.index_url = reverse('index')
 
     def test_label_list_view(self):
@@ -105,7 +111,10 @@ class LabelTests(TestCase):
         self.assertRedirects(response, self.label_list_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('Нельзя удалить метку, связанную с задачами', str(messages[0]))
+        self.assertIn(
+            'Нельзя удалить метку, связанную с задачами',
+            str(messages[0])
+        )
         self.assertTrue(Label.objects.filter(pk=self.label.pk).exists())
 
     def test_label_delete_unauthorized(self):

@@ -14,7 +14,6 @@ class CustomUserCreationForm(forms.ModelForm):
         widget=forms.PasswordInput,
         label="Пароль",
         required=True
-        # help_text="Пароль должен содержать минимум 8 символов, включая заглавную букву и цифру."
     )
     password2 = forms.CharField(
         widget=forms.PasswordInput,

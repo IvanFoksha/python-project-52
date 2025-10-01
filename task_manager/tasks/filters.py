@@ -59,12 +59,18 @@ class TaskFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.get('request', None)
         super().__init__(*args, **kwargs)
-        self.filters['status'].field.queryset = Task._meta.get_field('status').remote_field.model.objects.all()
-        self.filters['labels'].field.queryset = Task._meta.get_field('labels').remote_field.model.objects.all()
+        self.filters['status'].field.queryset = Task._meta. \
+            get_field('status').remote_field.model.objects.all()
+        self.filters['labels'].field.queryset = Task._meta. \
+            get_field('labels').remote_field.model.objects.all()
 
     def filter_own_tasks(self, queryset, name, value):
         if value and self.request:
-            print("Applying own_tasks filter, user:", self.request.user, "value:", value)
+            print(
+                "Applying own_tasks filter, user:",
+                self.request.user,
+                "value:", value
+            )
             return queryset.filter(author=self.request.user)
         return queryset
 

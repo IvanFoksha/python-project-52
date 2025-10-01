@@ -37,9 +37,18 @@ class TaskTests(TestCase):
         )
         self.task_list_url = reverse('task_list')
         self.task_create_url = reverse('task_create')
-        self.task_detail_url = reverse('task_detail', kwargs={'pk': self.task1.pk})
-        self.task_update_url = reverse('task_update', kwargs={'pk': self.task1.pk})
-        self.task_delete_url = reverse('task_delete', kwargs={'pk': self.task1.pk})
+        self.task_detail_url = reverse(
+            'task_detail',
+            kwargs={'pk': self.task1.pk}
+        )
+        self.task_update_url = reverse(
+            'task_update',
+            kwargs={'pk': self.task1.pk}
+        )
+        self.task_delete_url = reverse(
+            'task_delete',
+            kwargs={'pk': self.task1.pk}
+        )
 
     # CRUD тесты
     def test_task_list_view(self):
@@ -163,13 +172,19 @@ class TaskTests(TestCase):
         self.assertRedirects(response, self.task_list_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('Удаление задачи может выполнить только автор.', str(messages[0]))
+        self.assertIn(
+            'Удаление задачи может выполнить только автор.',
+            str(messages[0])
+        )
         self.assertTrue(Task.objects.filter(pk=self.task1.pk).exists())
 
     # Тесты фильтров
     def test_task_filter_by_status(self):
         self.client.login(username='testuser1', password='TestPass123')
-        response = self.client.get(self.task_list_url, {'status': str(self.status.pk)})
+        response = self.client.get(
+            self.task_list_url,
+            {'status': str(self.status.pk)}
+        )
         self.assertEqual(response.status_code, 200)
         tasks = response.context['tasks']
         self.assertEqual(len(tasks), 2)
@@ -178,7 +193,10 @@ class TaskTests(TestCase):
 
     def test_task_filter_by_assignee(self):
         self.client.login(username='testuser1', password='TestPass123')
-        response = self.client.get(self.task_list_url, {'assignee': str(self.user2.pk)})
+        response = self.client.get(
+            self.task_list_url,
+            {'assignee': str(self.user2.pk)}
+        )
         self.assertEqual(response.status_code, 200)
         tasks = response.context['tasks']
         self.assertEqual(len(tasks), 1)
@@ -186,7 +204,10 @@ class TaskTests(TestCase):
 
     def test_task_filter_by_labels(self):
         self.client.login(username='testuser1', password='TestPass123')
-        response = self.client.get(self.task_list_url, {'labels': [str(self.label.pk)]})
+        response = self.client.get(
+            self.task_list_url,
+            {'labels': [str(self.label.pk)]}
+        )
         self.assertEqual(response.status_code, 200)
         tasks = response.context['tasks']
         self.assertEqual(len(tasks), 1)
@@ -209,7 +230,10 @@ class TaskTests(TestCase):
         self.assertEqual(len(tasks), 2)
 
     def test_task_filter_unauthorized(self):
-        response = self.client.get(self.task_list_url, {'status': str(self.status.pk)})
+        response = self.client.get(
+            self.task_list_url,
+            {'status': str(self.status.pk)}
+        )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('index'))
         messages = list(get_messages(response.wsgi_request))

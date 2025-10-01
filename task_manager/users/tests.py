@@ -46,7 +46,10 @@ class UserTests(TestCase):
         response = self.client.post(self.create_url, form_data)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(username='invaliduser').exists())
-        self.assertContains(response, 'Пароль должен содержать минимум 8 символов')
+        self.assertContains(
+            response,
+            'Пароль должен содержать минимум 8 символов'
+        )
 
     def test_create_user_password_mismatch(self):
         form_data = {
@@ -93,7 +96,7 @@ class UserTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.user.refresh_from_db()
         self.assertEqual(self.user.username, 'updateduser')
-        self.assertTrue(self.user.check_password('TestPass123'))  # Пароль не изменился
+        self.assertTrue(self.user.check_password('TestPass123'))
         self.assertRedirects(response, self.list_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
@@ -107,7 +110,7 @@ class UserTests(TestCase):
             last_name='User'
         )
         self.client.login(username='testuser', password='TestPass123')
-        update_url = reverse('user_update', kwargs={'pk': another_user.pk})  # или 'users:user_update'
+        update_url = reverse('user_update', kwargs={'pk': another_user.pk})
         response = self.client.post(update_url)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.list_url)
@@ -148,14 +151,17 @@ class UserTests(TestCase):
             last_name='User'
         )
         self.client.login(username='testuser', password='TestPass123')
-        delete_url = reverse('user_delete', kwargs={'pk': another_user.pk})  # или 'users:user_delete'
+        delete_url = reverse('user_delete', kwargs={'pk': another_user.pk})
         response = self.client.post(delete_url)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, self.list_url)
         self.assertTrue(User.objects.filter(pk=another_user.pk).exists())
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('У вас нет прав для удаления этого профиля.', str(messages[0]))
+        self.assertIn(
+            'У вас нет прав для удаления этого профиля.',
+            str(messages[0])
+        )
 
     def test_delete_user_unauthenticated(self):
         response = self.client.post(self.delete_url)

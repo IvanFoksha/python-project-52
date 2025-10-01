@@ -95,10 +95,14 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('user_list')
 
     def test_func(self):
-        return self.request.user.is_authenticated and self.request.user == self.get_object()
+        return self.request.user.is_authenticated and \
+            self.request.user == self.get_object()
 
     def handle_no_permission(self):
-        messages.error(self.request, 'У вас нет прав для изменения этого профиля.')
+        messages.error(
+            self.request,
+            'У вас нет прав для изменения этого профиля.'
+        )
         return redirect('user_list')
 
     def form_valid(self, form):

@@ -25,8 +25,14 @@ class StatusTests(TestCase):
         self.label = Label.objects.create(name='Тестовая метка')
         self.status_list_url = reverse('status_list')
         self.status_create_url = reverse('status_create')
-        self.status_update_url = reverse('status_update', kwargs={'pk': self.status.pk})
-        self.status_delete_url = reverse('status_delete', kwargs={'pk': self.status.pk})
+        self.status_update_url = reverse(
+            'status_update',
+            kwargs={'pk': self.status.pk}
+        )
+        self.status_delete_url = reverse(
+            'status_delete',
+            kwargs={'pk': self.status.pk}
+        )
         self.index_url = reverse('index')
 
     def test_status_list_view(self):
@@ -104,7 +110,10 @@ class StatusTests(TestCase):
         self.assertRedirects(response, self.status_list_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('Нельзя удалить статус, связанный с задачами', str(messages[0]))
+        self.assertIn(
+            'Нельзя удалить статус, связанный с задачами',
+            str(messages[0])
+        )
         self.assertTrue(Status.objects.filter(pk=self.status.pk).exists())
 
     def test_status_delete_unauthorized(self):
