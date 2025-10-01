@@ -19,7 +19,7 @@ jobs:
           DEBUG: "False"
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          uv run python manage.py migrate
+          uv run make migrate
           uv run make test-users
           uv run make test-statuses
           uv run make test-labels
