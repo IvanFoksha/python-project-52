@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import sys
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -21,10 +22,7 @@ ALLOWED_HOSTS = [
     'webserver',
     'localhost',
     '127.0.0.1',
-    # os.getenv(
-    #     'RENDER_EXTERNAL_HOSTNAME',
     'https://task-manager-2c1d.onrender.com'
-    # )
 ]
 
 INSTALLED_APPS = [
@@ -93,37 +91,11 @@ else:
         )
     }
 
-# DATABASE_URL = os.getenv('DATABASE_URL')
-# # PostgreSQL для Render, SQLite для локальной разработки
-# if 'RENDER' in os.environ:
-#     database_url = os.getenv('DATABASE_URL')
-#     if database_url and '?sslmode=require' not in database_url:
-#         database_url += '?sslmode=require'
-#     DATABASES = {
-#         'default': dj_database_url.config(
-#             default=database_url,
-#             conn_max_age=600,
-#             conn_health_checks=True,
-#             engine='django.db.backends.postgresql',
-#         )
-#     }
-# else:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-
-
-# SQLite для локальной разработки
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3.test',
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {

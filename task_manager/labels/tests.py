@@ -81,7 +81,7 @@ class LabelTests(TestCase):
         self.assertEqual(self.label.name, 'Обновленная метка')
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('успешно обновлена', str(messages[0]))
+        self.assertIn('Метка успешно изменена', str(messages[0]))
 
     def test_label_update_unauthorized(self):
         form_data = {'name': 'Обновленная метка'}
@@ -112,7 +112,7 @@ class LabelTests(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertIn(
-            'Нельзя удалить метку, связанную с задачами',
+            'Невозможно удалить метку, связанную с задачами.',
             str(messages[0])
         )
         self.assertTrue(Label.objects.filter(pk=self.label.pk).exists())

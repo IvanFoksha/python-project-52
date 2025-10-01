@@ -4,10 +4,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
-        with: { python-version: "3.13" } # Из твоих логов
-      - run: pip install -r requirements.txt # Или uv sync
+        with: { python-version: "3.13" }
+      - run: uv sync
       - run: python manage.py migrate
-      - run: python manage.py test
+      - run: make test-users
+      - run: make test-statuses
+      - run: make test-labels
+      - run: make test-tasks

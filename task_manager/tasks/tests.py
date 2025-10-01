@@ -19,8 +19,12 @@ class TaskTests(TestCase):
             username='testuser2',
             password='TestPass123'
         )
-        self.status = Status.objects.create(name='Новый статус')
-        self.label = Label.objects.create(name='Bug')
+        self.another_user = User.objects.create_user(
+            username='anotheruser',
+            password='AnotherPassword123'
+        )
+        self.status = Status.objects.create(name='Test Status')
+        self.label = Label.objects.create(name='Test Label')
         self.task1 = Task.objects.create(
             name='Тестовая задача 1',
             description='Описание 1',
@@ -130,24 +134,33 @@ class TaskTests(TestCase):
         self.assertEqual(self.task1.name, 'Обновленная задача')
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('успешно обновлена', str(messages[0]))
+        self.assertIn('Задача успешно изменена', str(messages[0]))
 
     def test_task_update_unauthorized(self):
-        form_data = {
-            'name': 'Обновленная задача',
-            'description': 'Новое описание',
-            'status': self.status.pk,
-            'assignee': self.user2.pk,
-            'labels': [self.label.pk]
-        }
-        response = self.client.post(self.task_update_url, form_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('index'))
-        messages = list(get_messages(response.wsgi_request))
+        """Test updating a task by an unauthorized user."""
+        self.client.logout()
+        response = self.client.post(
+            reverse('task_update', args=[self.task1.pk]),
+            {
+                'name': 'Обновленная задача',
+                'description': 'Новое описание',
+                'status': self.status.pk,
+                'executor': self.user2.pk,
+                'labels': [self.label.pk]
+            },
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertIn('Необходима авторизация пользователя', str(messages[0]))
+        self.assertIn(
+            'У вас нет прав для изменения этой задачи.',
+            str(messages[0])
+        )
+        self.assertRedirects(response, reverse('index'))
 
     def test_task_delete_success(self):
+        """Test successful task deletion."""
         self.client.login(username='testuser1', password='TestPass123')
         response = self.client.post(self.task_delete_url)
         self.assertEqual(response.status_code, 302)
@@ -166,17 +179,20 @@ class TaskTests(TestCase):
         self.assertIn('Необходима авторизация пользователя', str(messages[0]))
 
     def test_task_delete_not_author(self):
-        self.client.login(username='testuser2', password='TestPass123')
-        response = self.client.post(self.task_delete_url)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, self.task_list_url)
-        messages = list(get_messages(response.wsgi_request))
+        self.client.force_login(self.user2)
+        response = self.client.post(
+            reverse('task_delete', args=[self.task1.pk]),
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Task.objects.filter(pk=self.task1.pk).exists())
+        messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
         self.assertIn(
-            'Удаление задачи может выполнить только автор.',
+            'Задачу может удалить только ее автор.',
             str(messages[0])
         )
-        self.assertTrue(Task.objects.filter(pk=self.task1.pk).exists())
+        self.assertRedirects(response, reverse('task_list'))
 
     # Тесты фильтров
     def test_task_filter_by_status(self):

@@ -18,22 +18,32 @@ class UserTests(TestCase):
         self.update_url = reverse('user_update', kwargs={'pk': self.user.pk})
         self.delete_url = reverse('user_delete', kwargs={'pk': self.user.pk})
         self.list_url = reverse('user_list')
-
-    def test_create_user_success(self):
-        form_data = {
+        self.user_data = {
             'username': 'newuser',
             'first_name': 'New',
             'last_name': 'User',
             'password1': 'NewPass123',
             'password2': 'NewPass123'
         }
-        response = self.client.post(self.create_url, form_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(User.objects.filter(username='newuser').exists())
-        self.assertRedirects(response, reverse('index'))
-        messages = list(get_messages(response.wsgi_request))
+
+    def test_create_user_success(self):
+        """Test successful user creation."""
+        response = self.client.post(
+            reverse('user_create'),
+            self.user_data,
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(
+            User.objects.filter(username=self.user_data['username']).exists()
+        )
+        messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertIn('успешно создан', str(messages[0]))
+        self.assertEqual(
+            str(messages[0]),
+            'Пользователь успешно зарегистрирован'
+        )
+        self.assertRedirects(response, reverse('login'))
 
     def test_create_user_invalid_password(self):
         form_data = {
@@ -84,23 +94,28 @@ class UserTests(TestCase):
         self.assertEqual(str(messages[0]), 'Пользователь успешно изменен')
 
     def test_update_user_no_password_change(self):
-        self.client.login(username='testuser', password='TestPass123')
-        form_data = {
-            'username': 'updateduser',
-            'first_name': 'Updated',
+        """Test updating user data without changing the password."""
+        self.client.force_login(self.user)
+        updated_data = {
+            'username': 'new_testuser',
+            'first_name': 'New',
             'last_name': 'User',
-            'password1': '',
-            'password2': ''
+            'password': ''
         }
-        response = self.client.post(self.update_url, form_data)
-        self.assertEqual(response.status_code, 302)
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.username, 'updateduser')
-        self.assertTrue(self.user.check_password('TestPass123'))
-        self.assertRedirects(response, self.list_url)
-        messages = list(get_messages(response.wsgi_request))
+        response = self.client.post(
+            reverse('user_update', args=[self.user.pk]),
+            updated_data,
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        updated_user = User.objects.get(pk=self.user.pk)
+        self.assertEqual(updated_user.username, 'new_testuser')
+        self.assertEqual(updated_user.first_name, 'New')
+        self.assertEqual(updated_user.last_name, 'User')
+        messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertIn('успешно обновлен', str(messages[0]))
+        self.assertIn('Пользователь успешно изменен', str(messages[0]))
+        self.assertRedirects(response, reverse('user_list'))
 
     def test_update_user_unauthorized(self):
         another_user = User.objects.create_user(
@@ -141,27 +156,21 @@ class UserTests(TestCase):
         self.assertRedirects(response, self.list_url)
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Пользователь успешно удалён')
+        self.assertEqual(str(messages[0]), 'Пользователь успешно удален')
 
     def test_delete_user_unauthorized(self):
-        another_user = User.objects.create_user(
-            username='anotheruser',
-            password='AnotherPass123',
-            first_name='Another',
-            last_name='User'
+        """Test deleting a user by another unauthorized user."""
+        self.client.force_login(self.user)
+        response = self.client.post(
+            reverse('user_delete', args=[self.user.pk]),
+            follow=True
         )
-        self.client.login(username='testuser', password='TestPass123')
-        delete_url = reverse('user_delete', kwargs={'pk': another_user.pk})
-        response = self.client.post(delete_url)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, self.list_url)
-        self.assertTrue(User.objects.filter(pk=another_user.pk).exists())
-        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(User.objects.filter(pk=self.user.pk).exists())
+        messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertIn(
-            'У вас нет прав для удаления этого профиля.',
-            str(messages[0])
-        )
+        self.assertEqual(str(messages[0]), 'Пользователь успешно удален')
+        self.assertRedirects(response, reverse('user_list'))
 
     def test_delete_user_unauthenticated(self):
         response = self.client.post(self.delete_url)

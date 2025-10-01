@@ -59,7 +59,7 @@ class StatusTests(TestCase):
         self.assertTrue(Status.objects.filter(name='В работе').exists())
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('успешно создан', str(messages[0]))
+        self.assertIn('Статус успешно создан', str(messages[0]))
 
     def test_status_create_unauthorized(self):
         form_data = {'name': 'В работе'}
@@ -80,7 +80,7 @@ class StatusTests(TestCase):
         self.assertEqual(self.status.name, 'Обновленный статус')
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('успешно обновлен', str(messages[0]))
+        self.assertIn('Статус успешно изменен', str(messages[0]))
 
     def test_status_update_unauthorized(self):
         form_data = {'name': 'Обновленный статус'}
@@ -101,7 +101,7 @@ class StatusTests(TestCase):
         self.assertFalse(Status.objects.filter(pk=status.pk).exists())
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
-        self.assertIn('успешно удален', str(messages[0]))
+        self.assertIn('Статус успешно удален', str(messages[0]))
 
     def test_status_delete_with_task(self):
         self.client.login(username='testuser', password='TestPass123')
@@ -111,7 +111,7 @@ class StatusTests(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertIn(
-            'Нельзя удалить статус, связанный с задачами',
+            'Невозможно удалить статус, связанный с задачами.',
             str(messages[0])
         )
         self.assertTrue(Status.objects.filter(pk=self.status.pk).exists())
