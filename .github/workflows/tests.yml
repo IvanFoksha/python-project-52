@@ -19,8 +19,8 @@ jobs:
           DEBUG: "False"
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          python manage.py migrate
-          make test-users
-          make test-statuses
-          make test-labels
-          make test-tasks
+          uv run python manage.py migrate
+          uv run make test-users
+          uv run make test-statuses
+          uv run make test-labels
+          uv run make test-tasks
