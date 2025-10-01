@@ -15,9 +15,9 @@ jobs:
           uv sync
       - name: Run tests
         env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          SECRET_KEY: "a-secret-key-for-testing"
           DEBUG: "False"
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: "sqlite:///db.sqlite3"
         run: |
           uv run make migrate
           uv run make test-users
