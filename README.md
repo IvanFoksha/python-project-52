@@ -1,6 +1,7 @@
 # Менеджер задач
 
-[![Actions Status](https://github.com/IvanFoksha/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/IvanFoksha/python-project-52/actions)
+[![Hexlet Check](https://github.com/IvanFoksha/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/IvanFoksha/python-project-52/actions/workflows/hexlet-check.yml)
+[![Tests](https://github.com/IvanFoksha/python-project-52/actions/workflows/tests.yml/badge.svg)](https://github.com/IvanFoksha/python-project-52/actions/workflows/tests.yml)
 
 ## О проекте
 
