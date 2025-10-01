@@ -11,7 +11,7 @@ jobs:
       - name: Install dependencies
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
-          source /home/runner/.local/bin/env
+          export PATH="$HOME/.local/bin:$PATH"
           uv sync
       - name: Run tests
         env:
