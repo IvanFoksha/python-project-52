@@ -9,21 +9,22 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv(
-    'DJANGO_SECRET_KEY',
-    'django-insecure-default-key-for-dev'
-)
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 ROLLBAR_ACCESS_TOKEN = os.getenv('ROLLBAR_ACCESS_TOKEN')
 
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     'webserver',
     'localhost',
     '127.0.0.1',
-    'https://task-manager-2c1d.onrender.com'
 ]
+
+RENDER_HOST = os.getenv('RENDER_HOST')
+if RENDER_HOST:
+    ALLOWED_HOSTS.append(RENDER_HOST)
+
 
 INSTALLED_APPS = [
     'task_manager.users.apps.UsersConfig',
