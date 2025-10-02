@@ -2,7 +2,7 @@
 
 [![Hexlet Check](https://github.com/IvanFoksha/python-project-52/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/IvanFoksha/python-project-52/actions/workflows/hexlet-check.yml)
 [![Tests](https://github.com/IvanFoksha/python-project-52/actions/workflows/tests.yml/badge.svg)](https://github.com/IvanFoksha/python-project-52/actions/workflows/tests.yml)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=IvanFoksha_python-project-52&metric=coverage)](https://sonarcloud.io/summary/new_code?id=IvanFoksha_python-project-52)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=IvanFoksha_python-project-52&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=IvanFoksha_python-project-52)
 
 ## О проекте
 
