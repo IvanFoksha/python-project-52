@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
@@ -35,8 +35,8 @@ jobs:
           DEBUG: "False"
           DATABASE_URL: "sqlite:///db.sqlite3"
         run: |
-          uv run coverage run manage.py test
-          uv run coverage xml
+          uv run coverage run --source='task_manager' manage.py test
+          uv run coverage xml -i
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
